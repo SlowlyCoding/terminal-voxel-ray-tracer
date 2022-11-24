@@ -3,21 +3,24 @@
 #include <string>
 #include <thread>
 #include <iostream>
+#include "pixelbuffer.hpp"
 
 class Clock {
 private:
   std::chrono::high_resolution_clock::time_point t_start, t_render, t_display, t_frame; 
-  int fps_limit = 0;
-  int precision = 1; // how many decimal places the frametimes have
+  int precision = 1; // precision for stats (decimal places)
+  double rendertime, displaytime; // seconds
 public:
-  double rendertime, displaytime, frametime=0.1; // seconds
+  double frametime; // seconds
+  int fps_limit = 0;
   std::string fps_str, rendertime_str, displaytime_str, frametime_str;
-  Clock() {t_start = std::chrono::high_resolution_clock::now();}; 
-  Clock(int fps_limit) : fps_limit(fps_limit) {t_start = std::chrono::high_resolution_clock::now();};
-  void calculate_rendertime();
-  void calculate_displaytime();
-  void calculate_frametime();
-  void show_stats(int *pixels, int *window_width, uint64_t *frame);
+  Clock() {}; 
+  Clock(int fps_limit) : fps_limit(fps_limit) {};
+  void start();
+  void finished_render();
+  void finished_display();
+  void finished_frame();
+  void display_stats();
 };
 
 

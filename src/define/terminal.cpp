@@ -21,26 +21,24 @@ void Terminal::reset_coloring() {
 }
 
 void Terminal::go_to(int x, int y) {
-  printf("\033[%d;%dH",x,y);
+  std::cout << "\033[" << x << ";" << y << "H";
 }
 
-void Terminal::display() {
+void Terminal::display(PixelBuffer *pixelbuffer) {
   // set cursor position to top left corner
   go_to(0,0);
   // go through pixel array
-  for (int i=0; i<window_width*window_height*3; i+=3) {
-    if (i == 0 || i == window_width*3-6) {
-      set_background_color(255,0,0);
-      set_foreground_color(0,0,255);
+  for (int y=0; y<pixelbuffer->height; y++) {
+    for (int x=0; x<pixelbuffer->width; x++) {
+      set_background_color(pixelbuffer->pixels[y][x][0], pixelbuffer->pixels[y][x][1], pixelbuffer->pixels[y][x][2]);
+      set_foreground_color(pixelbuffer->pixels[y+1][x][0], pixelbuffer->pixels[y+1][x][1], pixelbuffer->pixels[y+1][x][2]);
       std::cout << "\u2584"; // print lower half block
-    }
-    set_background_color(pixels[i], pixels[i+1], pixels[i+2]);
-    set_foreground_color(pixels[i+window_width*3], pixels[i+1+window_width*3], pixels[i+2+window_width*3]);
-    std::cout << "\u2584"; // print lower half block
-    // if end of frame is reached, start new line
-  if (i % window_width*3 == 0 && i != 0) {
-      i += window_width*3;
-      std::cout << "\n";
+      // if end of frame is reached, start new line
+      if (x == pixelbuffer->width-1) {
+        y += 1;
+        std::cout << "\n";
+      }
     }
   }
+  reset_coloring();
 }

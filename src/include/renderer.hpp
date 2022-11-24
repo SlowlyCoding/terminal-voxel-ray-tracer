@@ -1,4 +1,5 @@
 #include "camera.hpp"
+#include "pixelbuffer.hpp"
 #include "intersection_information.hpp"
 #include "vector.hpp"
 #include "octree.hpp"
@@ -9,14 +10,14 @@
 class Renderer {
   private:
     int window_width, window_height;
-    int *pixels;
+    PixelBuffer *pixelbuffer;
     Camera *camera;
     Vec3f *light;
     Octree *octree;
     bool shadows_enabled;
   public:
     Renderer(
-        int _window_width, int _window_height, int *_pixels,
+        int _window_width, int _window_height, PixelBuffer *pixelbuffer,
         Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled=true);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
@@ -26,5 +27,4 @@ class Renderer {
     void render_framepart(Vec3f pixel0, Vec3f pixel_step_x, Vec3f pixel_step_y, int thread_amount, int part);
     /* creates threads and calls render_framepart() */int thread_amount = std::thread::hardware_concurrency();
     void threaded_render();
-    void create_ppm();
 };

@@ -1,12 +1,12 @@
 #include "../include/renderer.hpp"
 
 Renderer::Renderer(
-    int _window_width, int _window_height, int *_pixels,
+    int _window_width, int _window_height, PixelBuffer *_pixelbuffer,
     Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled) {
   window_width = _window_width;
   window_height = _window_height;
   shadows_enabled = _shadows_enabled;
-  pixels = _pixels;
+  pixelbuffer = _pixelbuffer;
   camera = _camera;
   octree = _octree;
   light = _light;
@@ -62,9 +62,9 @@ void Renderer::render_framepart(
       Ray ray(camera->view_point, pixel.normalize());
       RGB pixel_color = trace_ray(&ray);
       pixel_color.normalize();
-      pixels[y*window_width*3 + x*3] = pixel_color.r;
-      pixels[y*window_width*3 + x*3 + 1] = pixel_color.g;
-      pixels[y*window_width*3 + x*3 + 2] = pixel_color.b;
+      pixelbuffer->pixels[y][x][0] = pixel_color.r;
+      pixelbuffer->pixels[y][x][1] = pixel_color.g;
+      pixelbuffer->pixels[y][x][2] = pixel_color.b;
     }
   }
 }
@@ -85,14 +85,4 @@ void Renderer::threaded_render() {
     threads.push_back(std::thread(&Renderer::render_framepart, this, pixel0, pixel_step_x, pixel_step_y, thread_amount, i));
   }
   for (auto& t : threads) t.join();
-}
-
-void Renderer::create_ppm() {
-  FILE *image_file;
-  image_file = fopen("image.ppm", "wb");
-  fprintf(image_file, "P6\n");
-  fprintf(image_file, "%d %d\n", window_width, window_height);
-  fprintf(image_file, "255\n");
-  fwrite(pixels, 1, window_width * window_height * 3, image_file);
-  fclose(image_file);
 }
