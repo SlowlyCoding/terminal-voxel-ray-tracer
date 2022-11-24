@@ -38,6 +38,14 @@ RGB Renderer::trace_ray(Ray *ray) {
         } 
       } 
     }
+  } else {
+    // Skybox
+    Vec3f p = ray->point(500.);
+    /* Vec3f p = ray->point(ray->max_t); */
+    Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
+    float u = 0.5 + atan2(d.z, d.x) / (2. * 3.141592);
+    float v = 0.5 + asin(d.y) / 3.141592;
+    // use u,v to read from a image
   }
   return pixel;
 }
@@ -65,7 +73,7 @@ void Renderer::threaded_render() {
   Vec3f half_screen_x = cross(camera->view_direction, camera->view_up); 
   Vec3f half_screen_y = cross(camera->view_direction, half_screen_x);
   half_screen_x = half_screen_x * (float)tan((camera->FOV/2.)*3.141592/180.);
-  half_screen_y = half_screen_y * (float)tan(((camera->FOV*((float)window_height/window_width))/2.)*3.141592/180.)*2.f;
+  half_screen_y = half_screen_y * (float)tan(((camera->FOV*((float)window_height/window_width))/2.)*3.141592/180.)*1.f;
   Vec3f pixel0 = camera->view_direction - half_screen_x - half_screen_y;
   Vec3f pixel_step_x = half_screen_x / ((float)window_width/2);
   Vec3f pixel_step_y = half_screen_y / ((float)window_height/2);
