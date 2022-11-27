@@ -33,7 +33,6 @@ class Octree {
     std::vector<Octree*> children;
     int max_depth;
     bool same_voxel_size;
-    Material material;
   public:
     // declaring leaf node
     Octree(

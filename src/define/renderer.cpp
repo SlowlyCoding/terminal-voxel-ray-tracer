@@ -22,7 +22,7 @@ RGB Renderer::trace_ray(Ray *ray) {
       // if the object that we just hit is reflective we shoot a new ray from that intersection point
       Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
       Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
-      pixel = ii.material.color + trace_ray(&reflected_ray) * ii.material.reflection_factor;
+      pixel = ii.material.color*(1.f-ii.material.reflection_factor) + trace_ray(&reflected_ray) * ii.material.reflection_factor;
     } else {
       // if the object is not refelctive we do shading
       Vec3f l = (*light - ii.point).normalize();

@@ -28,10 +28,10 @@ int main() {
   PixelBuffer pixelbuffer(window_width, window_height);
 
   /* Scene */
-  Camera camera(Vec3f(0.5, -1., 1.5), Vec3f(0.,1.,0.), Vec3f(0.,0.,1.), 65 );
+  Camera camera(Vec3f(0.5, -1., 1.5), Vec3f(0.,1.,0.), Vec3f(0.,0.,1.), 55 );
   Vec3f light(20.,10.,30.);
   Octree root( 0.,0.,0., 1.,1.,1., 4, true ); 
-  root.fill("sphere", 50, false);
+  root.fill("sphere", 100, false);
 
   /* Init and Setup */
   Renderer renderer(window_width, window_height, &pixelbuffer, &camera, &root, &light, false);
@@ -54,6 +54,9 @@ int main() {
     camera.view_direction = (Vec3f(0.5,0.5,0.5) - camera.view_point).normalize();
     camera.view_up = (Vec3f(0.5,0.5,2.5) - camera.view_point).normalize();
     cam_angle += 1.5*clock.frametime;
+    if (cam_angle > 1*3.14) {
+        root.fill("sphere", 30, false);
+    }
 
     clock.finished_frame();
     clock.display_stats();

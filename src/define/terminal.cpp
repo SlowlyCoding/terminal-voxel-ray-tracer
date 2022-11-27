@@ -8,12 +8,8 @@ void Terminal::show_cursor(bool show) {
   }
 }
 
-void Terminal::set_background_color(int r, int g, int b) {
-  std::cout << "\033[48;2;" << r << ";" << g << ";" << b << "m";
-}
-
-void Terminal::set_foreground_color(int r, int g, int b) {
-  std::cout << "\033[38;2;" << r << ";" << g << ";" << b << "m";
+void Terminal::set_color(int rf, int gf, int bf, int rb, int gb, int bb) {
+  printf("\033[38;2;%d;%d;%d;48;2;%d;%d;%dm", rf, gf, bf, rb, gb, bb);
 }
 
 void Terminal::reset_coloring() {
@@ -30,9 +26,8 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
   // go through pixel array
   for (int y=0; y<pixelbuffer->height; y++) {
     for (int x=0; x<pixelbuffer->width; x++) {
-      set_background_color(pixelbuffer->pixels[y][x][0], pixelbuffer->pixels[y][x][1], pixelbuffer->pixels[y][x][2]);
-      set_foreground_color(pixelbuffer->pixels[y+1][x][0], pixelbuffer->pixels[y+1][x][1], pixelbuffer->pixels[y+1][x][2]);
-      std::cout << "\u2584"; // print lower half block
+        set_color(pixelbuffer->pixels[y+1][x][0], pixelbuffer->pixels[y+1][x][1], pixelbuffer->pixels[y+1][x][2], pixelbuffer->pixels[y][x][0], pixelbuffer->pixels[y][x][1], pixelbuffer->pixels[y][x][2]);
+        std::cout << "\u2584"; // print lower half block
       // if end of frame is reached, start new line
       if (x == pixelbuffer->width-1) {
         y += 1;
