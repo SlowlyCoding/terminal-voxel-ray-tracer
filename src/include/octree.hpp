@@ -33,7 +33,6 @@ class Octree {
     std::vector<Octree*> children;
     int max_depth;
     bool same_voxel_size;
-  public:
     // declaring leaf node
     Octree(
         float x_min, float y_min, float z_min, // bottom left front
@@ -45,17 +44,18 @@ class Octree {
         float x_max, float y_max, float z_max,
         Vertex v
         );
+    // inserts a point into the octree by splitting each node which contains more than 1 point, thus creating the Octree
+    void insert_vertex(Vertex v, bool debug);
+    bool ray_hit_node(Ray *ray, float *_t_min, float *_t_max);
+    // returns closest point node the ray hit
+  public:
     // declaring parent/root node
     Octree(
         float x_min, float y_min, float z_min,
         float x_max, float y_max, float z_max,
         int max_depth, bool same_voxel_size
         );
-    // inserts a point into the octree by splitting each node which contains more than 1 point, thus creating the Octree
-    void insert_vertex(Vertex v, bool debug);
     void fill(std::string shape, int voxelcount, bool debug);
     int count_voxels();
-    bool ray_hit_node(Ray *ray, float *_t_min, float *_t_max);
-    // returns closest point node the ray hit
     bool intersection(Ray *ray, intersection_information *ii);
 };
