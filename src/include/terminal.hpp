@@ -16,7 +16,8 @@ private:
 public:
   Terminal(DisplayMode display_mode) : display_mode(display_mode) {};
   void show_cursor(bool show);
-  void set_color(int r_back, int g_back, int b_back, int r_fore, int g_fore, int b_fore);
+  void set_foreground_color(int r, int g, int b);
+  void set_background_color(int r, int g, int b);
   void reset_coloring();
   void go_to(int x, int y);
   void display(PixelBuffer *pb);

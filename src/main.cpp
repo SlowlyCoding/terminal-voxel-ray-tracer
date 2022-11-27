@@ -35,8 +35,8 @@ int main() {
 
   /* Init and Setup */
   Renderer renderer(window_width, window_height, &pixelbuffer, &camera, &root, &light, false);
-  Clock clock;
-  Terminal terminal(terminal_ascii);
+  Clock clock(60);
+  Terminal terminal(terminal_color);
   terminal.show_cursor(false);
 
   /* Main Loop */
@@ -53,7 +53,7 @@ int main() {
     camera.view_point.y = cos(cam_angle)*1.5+0.5;
     camera.view_direction = (Vec3f(0.5,0.5,0.5) - camera.view_point).normalize();
     camera.view_up = (Vec3f(0.5,0.5,2.5) - camera.view_point).normalize();
-    cam_angle += 1.5*clock.frametime;
+    cam_angle += 0.5*clock.frametime;
     if (cam_angle > 1*3.14) {
         /* root.fill("sphere", 30, false); */
     }

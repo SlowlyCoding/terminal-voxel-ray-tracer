@@ -13,10 +13,11 @@ void Clock::finished_display() {
   displaytime = std::chrono::duration_cast<std::chrono::microseconds>(t_display-t_render).count()/1000000.;
 }
 void Clock::finished_frame() {
+  t_frame = std::chrono::high_resolution_clock::now();
+  frametime = std::chrono::duration_cast<std::chrono::microseconds>(t_frame-t_start).count()/1000000.;
   // limiting fps
   if (fps_limit != 0) {
-    /* std::this_thread::sleep_for(std::chrono::microseconds((int)((1000000./fps_limit - frametime*1000000.)*0.92))); */
-    std::this_thread::sleep_for(std::chrono::microseconds((int)(1000000.0/(double)fps_limit - frametime)));
+    std::this_thread::sleep_for(std::chrono::microseconds((int)(((1./fps_limit)-frametime)*1000000)));
   }
   // calculate new frametime
   t_frame = std::chrono::high_resolution_clock::now();
