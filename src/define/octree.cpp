@@ -189,7 +189,9 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
       insert_vertex(
           Vertex(
             Vec3f(float(rand())/float((RAND_MAX)), float(rand())/float((RAND_MAX)), float(rand())/float((RAND_MAX))), 
-            Material(RGB("orange"), 1.2, 0.2)
+            // random color
+            Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
+            //Material(RGB("orange"), 1.2, 0.2)
             ), 
           debug);
     }
@@ -201,6 +203,7 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
       insert_vertex(
           Vertex(
             Vec3f(0.5*cos(angle1)*sin(angle2)+0.5, 0.5*sin(angle1)*sin(angle2)+0.5, 0.5*cos(angle2)+0.5),
+            // random color
             Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
             ), 
           debug);
@@ -213,7 +216,8 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
       insert_vertex(
           Vertex(
             Vec3f(0.5+0.5*cos(angle), 0.5+0.5*sin(angle), height),
-            Material(RGB("orange"), 1.2, 0.2)
+            // random color
+            Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
             ), 
           debug);
     }
