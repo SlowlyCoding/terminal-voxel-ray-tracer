@@ -13,9 +13,7 @@
 
   TODO:
     Skybox UV mapping (read pixels from image)
-    create config file and read from that
     fix display bug
-    change camera vectors to angles
     try keyboard input with raw mode enabled
     create 2 buffers and only change display the pixels which have changed (less set_color calls)
     maybe create scene class and store camera, objects, ... in there
@@ -31,7 +29,6 @@ int main() {
   Camera camera(&config);
   Octree root(&config);
   root.fill("sphere", 100, false);
-  Vec3f light(20.,10.,30.);
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
   Terminal terminal(&config);

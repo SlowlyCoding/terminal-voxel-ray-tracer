@@ -17,8 +17,8 @@ public:
   int terminal_fps_limit;
 
   Vec3f camera_view_point;
-  Vec3f camera_view_direction;
-  Vec3f camera_view_up;
+  float camera_view_angle_x;
+  float camera_view_angle_z;
   int camera_fov;
 
   Vec3f octree_center;

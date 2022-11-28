@@ -14,12 +14,8 @@ Config::Config(std::string config_file_name) {
   camera_view_point = Vec3f(data["camera"]["view_point"][0], 
                             data["camera"]["view_point"][1], 
                             data["camera"]["view_point"][2]);
-  camera_view_direction = Vec3f(data["camera"]["view_direction"][0], 
-                                data["camera"]["view_direction"][1], 
-                                data["camera"]["view_direction"][2]);
-  camera_view_up = Vec3f(data["camera"]["view_up"][0], 
-                         data["camera"]["view_up"][1], 
-                         data["camera"]["view_up"][2]);
+  camera_view_angle_x = data["camera"]["view_angle_x"];
+  camera_view_angle_z = data["camera"]["view_angle_z"];
   camera_fov = data["camera"]["fov"];
 
   octree_center = Vec3f(data["octree"]["center"][0], 

@@ -10,8 +10,8 @@
 
   "camera": {
     "view_point": [ 0.5, -1, 1.5 ],
-    "view_direction": [ 0, 1, 0 ],
-    "view_up": [ 0, 0, 1 ],
+    "view_angle_x": -0.8,
+    "view_angle_z": 0,
     "fov": 55
   }, 
 
