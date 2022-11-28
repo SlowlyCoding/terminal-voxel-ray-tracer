@@ -22,7 +22,7 @@ public:
   void finished_render();
   void finished_display();
   void finished_frame();
-  void display_stats();
+  void display_performance();
 };
 
 

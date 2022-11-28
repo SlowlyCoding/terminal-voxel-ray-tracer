@@ -19,7 +19,7 @@
     "center": [ 0.5, 0.5, 0.5 ],
     "side_length": 1,
     "depth": 4,
-    "same_voxel_size": false
+    "same_voxel_size": true
   },
 
   "light": {

@@ -28,7 +28,7 @@ void Clock::finished_frame() {
   t_frame = std::chrono::high_resolution_clock::now();
   frametime = std::chrono::duration_cast<std::chrono::microseconds>(t_frame-t_start).count()/1000000.;
 }
-void Clock::display_stats() {
+void Clock::display_performance() {
   rendertime_str = std::to_string(rendertime*1000);
   rendertime_str = rendertime_str.substr(0, rendertime_str.find(".")+precision+1);
   displaytime_str = std::to_string(displaytime*1000);
