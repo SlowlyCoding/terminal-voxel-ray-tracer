@@ -1,5 +1,10 @@
 #include "../include/clock.hpp"
 
+Clock::Clock(Config *config) {
+  fps_limit_enabled = config->terminal_fps_limit_enabled;
+  fps_limit = config->terminal_fps_limit;
+}
+
 void Clock::start() {
   t_start = std::chrono::high_resolution_clock::now();
 }
@@ -16,7 +21,7 @@ void Clock::finished_frame() {
   t_frame = std::chrono::high_resolution_clock::now();
   frametime = std::chrono::duration_cast<std::chrono::microseconds>(t_frame-t_start).count()/1000000.;
   // limiting fps
-  if (fps_limit != 0) {
+  if (fps_limit_enabled) {
     std::this_thread::sleep_for(std::chrono::microseconds((int)(((1./fps_limit)-frametime)*1000000)));
   }
   // calculate new frametime

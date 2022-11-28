@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include "include/config.hpp"
 #include "include/terminal.hpp"
 #include "include/clock.hpp"
 #include "include/pixelbuffer.hpp"
@@ -11,36 +12,33 @@
 /*
 
   TODO:
-    Skybox UV mapping (read from pixels from image)
+    Skybox UV mapping (read pixels from image)
     create config file and read from that
     fix display bug
+    change camera vectors to angles
+    try keyboard input with raw mode enabled
+    create 2 buffers and only change display the pixels which have changed (less set_color calls)
+    maybe create scene class and store camera, objects, ... in there
 
 */
 
 int main() {
+  // parse config file
+  Config config("config.json");
 
-
-  std::cout << "added from test branch\n";
-
-
-  /* Create Pixel Buffer */
-  PixelBuffer pixelbuffer(0, 0);
-
-  /* Scene */
-  Camera camera(Vec3f(0.5, -1., 1.5), Vec3f(0.,1.,0.), Vec3f(0.,0.,1.), 55 );
-  Vec3f light(20.,10.,30.);
-  Octree root( 0.,0.,0., 1.,1.,1., 4, true ); 
+  // init everything
+  PixelBuffer pixelbuffer(&config);
+  Camera camera(&config);
+  Octree root(&config);
   root.fill("sphere", 100, false);
-
-  /* Init and Setup */
-  Renderer renderer(&pixelbuffer, &camera, &root, &light, false);
-  Clock clock(60);
-  Terminal terminal(terminal_color);
+  Vec3f light(20.,10.,30.);
+  Renderer renderer(&config, &pixelbuffer, &camera, &root);
+  Clock clock(&config);
+  Terminal terminal(&config);
   terminal.show_cursor(false);
 
-  /* Main Loop */
+  // main loop
   float cam_angle = 0; // rad
-  system("clear");
   while (cam_angle < 4.25*3.14) {
     clock.start();
     renderer.threaded_render();

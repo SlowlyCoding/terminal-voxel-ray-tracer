@@ -68,6 +68,34 @@ Octree::Octree(
   max_depth = _max_depth;
   same_voxel_size = _same_voxel_size;
 }
+Octree::Octree(Config *config) {
+  type = Parent;
+  bounding_plane_d.assign(9, 0.);
+  float half_side = config->octree_side_length/2.;
+  bounding_plane_d[X_MIN] = config->octree_center.x-half_side;
+  bounding_plane_d[Y_MIN] = config->octree_center.y-half_side;
+  bounding_plane_d[Z_MIN] = config->octree_center.z-half_side;
+  bounding_plane_d[X_MID] = config->octree_center.x;
+  bounding_plane_d[Y_MID] = config->octree_center.y;
+  bounding_plane_d[Z_MID] = config->octree_center.z;
+  bounding_plane_d[X_MAX] = config->octree_center.x+half_side;
+  bounding_plane_d[Y_MAX] = config->octree_center.y+half_side;
+  bounding_plane_d[Z_MAX] = config->octree_center.z+half_side;
+  children.assign(8, nullptr);
+  for (int i=0; i<8; i++) {
+    std::bitset<3> child_bitset(i);
+    children[i] = new Octree(
+        (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
+        (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
+        (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
+        (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
+        (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
+        (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID]
+        );
+  }
+  max_depth = config->octree_depth;
+  same_voxel_size = config->octree_same_voxel_size;
+}
 
 void Octree::insert_vertex(Vertex v, bool debug) {
   // check if the tree is deep enough

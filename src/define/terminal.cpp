@@ -1,5 +1,9 @@
 #include "../include/terminal.hpp"
 
+Terminal::Terminal(Config *config) {
+  display_mode = config->terminal_display_mode;
+}
+
 void Terminal::show_cursor(bool show) {
   if (show) {
     printf("\033[?25h");
@@ -25,9 +29,12 @@ void Terminal::go_to(int x, int y) {
 
 void Terminal::display(PixelBuffer *pixelbuffer) {
   switch (display_mode) {
-    // terminal_ascii skips every second row of the frame because it cant make use of the half-block
-    // every row is still being rendered so it doesn't gain any speed either
-    case terminal_ascii:
+    /*
+      display_mode 0 - ascii
+      this display mode skips every second row of the frame because it cant make use of the half-block like 
+      display mode 1. Every row is still being rendered so it doesn't gain any speed either
+    */
+    case 0:
       // set cursor position to top left corner
       go_to(0,0);
       // go through pixel array
@@ -49,8 +56,11 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
       }
       break;
 
-    // the number of calls to set the color can be reduces by checking the pixel color has changed
-    case terminal_color:
+    /*
+      display_mode 1 - colored ANSI
+      the number of calls to set the color can be reduces by checking if the pixel color has changed
+    */
+    case 1:
       go_to(0,0);
       for (int y=0; y<pixelbuffer->height; y++) {
         for (int x=0; x<pixelbuffer->width; x++) {
@@ -86,9 +96,8 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
         }
       }
       break;
-    case image:
-      std::cout << "image output not yet handled\n";
-      // write to ppm file
+    default:
+      std::cout << "display_modes:\n0 - ascii\n1 - colored ANSI\n";
       break;
   };
   reset_coloring();

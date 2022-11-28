@@ -1,11 +1,11 @@
 #include "../include/renderer.hpp"
 
-Renderer::Renderer(PixelBuffer *_pixelbuffer, Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled) {
+Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, Octree *_octree) {
   pixelbuffer = _pixelbuffer;
   camera = _camera;
   octree = _octree;
-  light = _light;
-  shadows_enabled = _shadows_enabled;
+  light = config->light_position;
+  shadows_enabled = config->renderer_shadows_enabled;
 }
 
 RGB Renderer::trace_ray(Ray *ray) {
@@ -21,7 +21,7 @@ RGB Renderer::trace_ray(Ray *ray) {
       pixel = ii.material.color*(1.f-ii.material.reflection_factor) + trace_ray(&reflected_ray) * ii.material.reflection_factor;
     } else {
       // if the object is not refelctive we do shading
-      Vec3f l = (*light - ii.point).normalize();
+      Vec3f l = (light - ii.point).normalize();
       RGB diffuse = ii.material.color * ii.material.diffuse * std::max(0.f,dot(ii.normal, l));
       Vec3f bisector = l + ray->direction*-1;
       RGB specular = ii.material.color * ii.material.specular * std::max(0.f,dot(ii.normal, bisector));

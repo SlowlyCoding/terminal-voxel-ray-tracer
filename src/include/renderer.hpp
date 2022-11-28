@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "camera.hpp"
 #include "pixelbuffer.hpp"
 #include "intersection_information.hpp"
@@ -11,11 +12,11 @@ class Renderer {
   private:
     PixelBuffer *pixelbuffer;
     Camera *camera;
-    Vec3f *light;
     Octree *octree;
+    Vec3f light;
     bool shadows_enabled;
   public:
-    Renderer(PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled);
+    Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
     RGB trace_ray(Ray *ray);

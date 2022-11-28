@@ -1,4 +1,5 @@
 #pragma once
+#include "config.hpp"
 #include "vector.hpp"
 
 class Camera {
@@ -12,4 +13,6 @@ class Camera {
     float FOV;
     Camera(Vec3f view_point, Vec3f view_direction, Vec3f view_up, int FOV) : 
       view_point(view_point), view_direction(view_direction.normalize()), view_up(view_up.normalize()), FOV(FOV) {};
+    Camera(Config *config);
 };
+

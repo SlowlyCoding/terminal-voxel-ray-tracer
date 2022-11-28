@@ -1,4 +1,5 @@
 #pragma once
+#include "config.hpp"
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <vector>
@@ -8,5 +9,5 @@ public:
   int width;
   int height;
   std::vector<std::vector<std::vector<int>>> pixels;
-  PixelBuffer(int _width, int _height);
+  PixelBuffer(Config *config);
 };

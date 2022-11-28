@@ -1,20 +1,15 @@
 #pragma once
 #include <iostream>
 #include "clock.hpp"
+#include "config.hpp"
 #include "pixelbuffer.hpp"
-
-enum DisplayMode {
-  terminal_ascii,
-  terminal_color,
-  image,
-};
 
 class Terminal {
 private:
-  DisplayMode display_mode; 
+  int display_mode; 
   char grayscale[11] = " .:-=+*#%@";
 public:
-  Terminal(DisplayMode display_mode) : display_mode(display_mode) {};
+  Terminal(Config *config);
   void show_cursor(bool show);
   void set_foreground_color(int r, int g, int b);
   void set_background_color(int r, int g, int b);
