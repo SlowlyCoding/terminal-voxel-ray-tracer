@@ -18,6 +18,11 @@
 */
 
 int main() {
+
+
+  std::cout << "added from test branch\n";
+
+
   /* Create Pixel Buffer */
   PixelBuffer pixelbuffer(0, 0);
 
