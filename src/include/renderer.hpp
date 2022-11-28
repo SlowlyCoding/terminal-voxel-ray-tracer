@@ -9,16 +9,13 @@
 
 class Renderer {
   private:
-    int window_width, window_height;
     PixelBuffer *pixelbuffer;
     Camera *camera;
     Vec3f *light;
     Octree *octree;
     bool shadows_enabled;
   public:
-    Renderer(
-        int _window_width, int _window_height, PixelBuffer *pixelbuffer,
-        Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled=true);
+    Renderer(PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
     RGB trace_ray(Ray *ray);

@@ -1,15 +1,11 @@
 #include "../include/renderer.hpp"
 
-Renderer::Renderer(
-    int _window_width, int _window_height, PixelBuffer *_pixelbuffer,
-    Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled) {
-  window_width = _window_width;
-  window_height = _window_height;
-  shadows_enabled = _shadows_enabled;
+Renderer::Renderer(PixelBuffer *_pixelbuffer, Camera *_camera, Octree *_octree, Vec3f *_light, bool _shadows_enabled) {
   pixelbuffer = _pixelbuffer;
   camera = _camera;
   octree = _octree;
   light = _light;
+  shadows_enabled = _shadows_enabled;
 }
 
 RGB Renderer::trace_ray(Ray *ray) {
@@ -53,11 +49,11 @@ RGB Renderer::trace_ray(Ray *ray) {
 void Renderer::render_framepart(
     Vec3f pixel0, Vec3f pixel_step_x, Vec3f pixel_step_y, int thread_amount, int part) {
   // assign each thread a part of the frame
-  int y = window_height * (1./thread_amount) * part;
-  int y_max = window_height * (1./thread_amount) * (part+1);
+  int y = pixelbuffer->height * (1./thread_amount) * part;
+  int y_max = pixelbuffer->height * (1./thread_amount) * (part+1);
   // go through each pixel of that part and call trace_ray()
   for (y; y<y_max; y++) {
-    for (int x=0; x<window_width; x++) {
+    for (int x=0; x<pixelbuffer->width; x++) {
       Vec3f pixel = pixel0 + pixel_step_x*x + pixel_step_y*y;
       Ray ray(camera->view_point, pixel.normalize());
       RGB pixel_color = trace_ray(&ray);
@@ -73,10 +69,10 @@ void Renderer::threaded_render() {
   Vec3f half_screen_x = cross(camera->view_direction, camera->view_up); 
   Vec3f half_screen_y = cross(camera->view_direction, half_screen_x);
   half_screen_x = half_screen_x * (float)tan((camera->FOV/2.)*3.141592/180.);
-  half_screen_y = half_screen_y * (float)tan(((camera->FOV*((float)window_height/window_width))/2.)*3.141592/180.)*1.f;
+  half_screen_y = half_screen_y * (float)tan(((camera->FOV*((float)pixelbuffer->height/pixelbuffer->width))/2.)*3.141592/180.)*1.f;
   Vec3f pixel0 = camera->view_direction - half_screen_x - half_screen_y;
-  Vec3f pixel_step_x = half_screen_x / ((float)window_width/2);
-  Vec3f pixel_step_y = half_screen_y / ((float)window_height/2);
+  Vec3f pixel_step_x = half_screen_x / ((float)pixelbuffer->width/2);
+  Vec3f pixel_step_y = half_screen_y / ((float)pixelbuffer->height/2);
 
   // each thread renders its own part of the frame
   int thread_amount = std::thread::hardware_concurrency();

@@ -1,8 +1,11 @@
 #include "../include/pixelbuffer.hpp"
 
 PixelBuffer::PixelBuffer(int _width, int _height) {
-  width = _width;
-  height = _height;
+  // get terminal size
+  struct winsize w;
+  ioctl(STDOUT_FILENO,   TIOCGWINSZ, &w);
+  width = w.ws_col;
+  height = (w.ws_row-3)*2;
   // height can only be an even number
   if (height % 2 != 0) {
     height += 1;

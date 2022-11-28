@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+#include <unistd.h>
+#include <sys/ioctl.h>
 #include <vector>
 
 class PixelBuffer {

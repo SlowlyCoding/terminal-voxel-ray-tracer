@@ -1,5 +1,3 @@
-#include <unistd.h>
-#include <sys/ioctl.h>
 #include <iostream>
 #include <chrono>
 #include "include/terminal.hpp"
@@ -13,19 +11,15 @@
 /*
 
   TODO:
-    Skybox UV mapping
+    Skybox UV mapping (read from pixels from image)
+    create config file and read from that
+    fix display bug
 
 */
 
 int main() {
-  /* Get Terminal Size */
-  struct winsize w;
-  ioctl(STDOUT_FILENO,   TIOCGWINSZ, &w);
-  int window_width = w.ws_col;
-  int window_height = (w.ws_row-3)*2;
-
   /* Create Pixel Buffer */
-  PixelBuffer pixelbuffer(window_width, window_height);
+  PixelBuffer pixelbuffer(0, 0);
 
   /* Scene */
   Camera camera(Vec3f(0.5, -1., 1.5), Vec3f(0.,1.,0.), Vec3f(0.,0.,1.), 55 );
@@ -34,13 +28,14 @@ int main() {
   root.fill("sphere", 100, false);
 
   /* Init and Setup */
-  Renderer renderer(window_width, window_height, &pixelbuffer, &camera, &root, &light, false);
+  Renderer renderer(&pixelbuffer, &camera, &root, &light, false);
   Clock clock(60);
   Terminal terminal(terminal_color);
   terminal.show_cursor(false);
 
   /* Main Loop */
   float cam_angle = 0; // rad
+  system("clear");
   while (cam_angle < 4.25*3.14) {
     clock.start();
     renderer.threaded_render();
@@ -54,9 +49,6 @@ int main() {
     camera.view_direction = (Vec3f(0.5,0.5,0.5) - camera.view_point).normalize();
     camera.view_up = (Vec3f(0.5,0.5,2.5) - camera.view_point).normalize();
     cam_angle += 0.5*clock.frametime;
-    if (cam_angle > 1*3.14) {
-        /* root.fill("sphere", 30, false); */
-    }
 
     clock.finished_frame();
     clock.display_stats();
