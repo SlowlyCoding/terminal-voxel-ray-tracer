@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": false,
+    "fullscreen": true,
     "width": 120,
     "height": 102,
     "display_mode": 1,
@@ -27,6 +27,8 @@
   },
 
   "renderer": {
-    "shadows_enabled": false
+    "shadows_enabled": false,
+    "skybox_enabled": true,
+    "skybox": "assets/checkermap.jpg"
   }
 }

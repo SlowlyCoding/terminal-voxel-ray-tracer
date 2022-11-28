@@ -30,4 +30,6 @@ Config::Config(std::string config_file_name) {
                          data["light"]["position"][2]);
 
   renderer_shadows_enabled = data["renderer"]["shadows_enabled"];
+  renderer_skybox_enabled = data["renderer"]["skybox_enabled"];
+  renderer_skybox = data["renderer"]["skybox"];
 }

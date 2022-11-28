@@ -1,3 +1,4 @@
+#pragma once
 #include "config.hpp"
 #include "camera.hpp"
 #include "pixelbuffer.hpp"
@@ -15,6 +16,10 @@ class Renderer {
     Octree *octree;
     Vec3f light;
     bool shadows_enabled;
+
+    bool skybox_enabled;
+    int skybox_width, skybox_height, skybox_channels;
+    unsigned char *skybox;
   public:
     Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */

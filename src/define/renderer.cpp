@@ -1,4 +1,6 @@
 #include "../include/renderer.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "../include/nothings/stb_image.h"
 
 Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, Octree *_octree) {
   pixelbuffer = _pixelbuffer;
@@ -6,6 +8,14 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   octree = _octree;
   light = config->light_position;
   shadows_enabled = config->renderer_shadows_enabled;
+
+  skybox_enabled = config->renderer_skybox_enabled;
+  if (skybox_enabled) {
+    skybox = stbi_load(config->renderer_skybox.c_str(), &skybox_width, &skybox_height, &skybox_channels, 3);
+    if (skybox == nullptr) {
+      skybox_enabled = false;
+    }
+  }
 }
 
 RGB Renderer::trace_ray(Ray *ray) {
@@ -35,13 +45,23 @@ RGB Renderer::trace_ray(Ray *ray) {
       } 
     }
   } else {
-    // Skybox
-    Vec3f p = ray->point(500.);
-    /* Vec3f p = ray->point(ray->max_t); */
-    Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
-    float u = 0.5 + atan2(d.z, d.x) / (2. * 3.141592);
-    float v = 0.5 + asin(d.y) / 3.141592;
-    // use u,v to read from a image
+    if (skybox_enabled) {
+      // Skybox
+      Vec3f p = ray->point(500.);
+      /* Vec3f p = ray->point(ray->max_t); */
+      Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
+      float u = 0.5 + atan2(d.z, d.x) / (2. * 3.141592);
+      float v = 0.5 + asin(d.y) / 3.141592;
+      // use u,v to read from image
+      u *= skybox_width;
+      v *= skybox_height;
+      /* std::cout << "Pixel(10,10):  r(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3)]) << */
+      /*                           ") g(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3+1)]) << */
+      /*                           ") b(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3+2)])<< ")\n"; */
+      pixel = RGB(static_cast<int>(skybox[int(v*skybox_width*3 + u*3)]), 
+                  static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 1)]), 
+                  static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 2)]));
+    }
   }
   return pixel;
 }
