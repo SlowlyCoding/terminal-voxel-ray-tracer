@@ -15,6 +15,14 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
     if (skybox == nullptr) {
       skybox_enabled = false;
     }
+    float u = 0.81;
+    float v = 0.47;
+    u *= skybox_width;
+    v *= skybox_height;
+    RGB pixel = RGB(static_cast<int>(skybox[int(v*skybox_width*3 + u*3)]), 
+                    static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 1)]), 
+                    static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 2)]));
+    std::cout << "Pixel(10,10):  r(" << pixel.r << ") g(" << pixel.g << ") b(" << pixel.b << ")\n";
   }
 }
 
@@ -46,12 +54,13 @@ RGB Renderer::trace_ray(Ray *ray) {
     }
   } else {
     if (skybox_enabled) {
-      // Skybox
-      Vec3f p = ray->point(500.);
       /* Vec3f p = ray->point(ray->max_t); */
+      Vec3f p = ray->point(100);
       Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
-      float u = 0.5 + atan2(d.z, d.x) / (2. * 3.141592);
-      float v = 0.5 + asin(d.y) / 3.141592;
+      /* float u = 0.5 + atan2(d.x, d.y) / (2. * 3.141592); */
+      /* float v = 0.5 + asin(d.z) / 3.141592; */
+      float u = 0.5 + atan2(ray->direction.x, ray->direction.y) / (2. * 3.141592);
+      float v = 0.5 + asin(ray->direction.z) / 3.141592;
       // use u,v to read from image
       u *= skybox_width;
       v *= skybox_height;

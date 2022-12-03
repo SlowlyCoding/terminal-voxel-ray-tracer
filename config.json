@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": true,
+    "fullscreen": false,
     "width": 120,
     "height": 102,
     "display_mode": 1,
@@ -9,9 +9,9 @@
   },
 
   "camera": {
-    "view_point": [ 0.5, -1, 1.5 ],
-    "view_angle_x": -0.8,
-    "view_angle_z": 0,
+    "view_point": [ 1.5, -0.5, 0.5 ],
+    "view_angle_x": 0.01,
+    "view_angle_z": -0.785,
     "fov": 55
   }, 
 
@@ -23,12 +23,12 @@
   },
 
   "light": {
-    "position": [ 20, 10, 30 ]
+    "position": [ 20, -10, 30 ]
   },
 
   "renderer": {
     "shadows_enabled": false,
     "skybox_enabled": true,
-    "skybox": "assets/checkermap.jpg"
+    "skybox": "assets/checkermap2.jpg"
   }
 }

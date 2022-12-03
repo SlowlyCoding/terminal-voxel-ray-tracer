@@ -19,7 +19,7 @@ class Renderer {
 
     bool skybox_enabled;
     int skybox_width, skybox_height, skybox_channels;
-    unsigned char *skybox;
+    uint8_t* skybox;
   public:
     Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */

@@ -16,7 +16,7 @@
     fix display bug
     fix whitespace before stats display
     try keyboard input with raw mode enabled
-    create 2 buffers and only change display the pixels which have changed (less set_color calls)
+    create 2 buffers and only display the pixels which have changed (less set_color calls)
     maybe create scene class and store camera, objects, ... in there
 
 */
@@ -43,12 +43,13 @@ int main() {
     clock.finished_render();
     terminal.display(&pixelbuffer);
     clock.finished_display();
+    return 0;
 
     // maybe change this here to something like scene.update()
     camera.view_point.x = sin(cam_angle)*1.5+0.5;
     camera.view_point.y = cos(cam_angle)*1.5+0.5;
-    camera.view_direction = (Vec3f(0.5,0.5,0.5) - camera.view_point).normalize();
-    camera.view_up = (Vec3f(0.5,0.5,2.5) - camera.view_point).normalize();
+    camera.view_direction = (config.octree_center - camera.view_point).normalize();
+    camera.view_up = Vec3f(0.,0.,1.);
     cam_angle += 0.5*clock.frametime;
 
     clock.finished_frame();
