@@ -12,10 +12,10 @@ void Terminal::show_cursor(bool show) {
   }
 }
 
-void Terminal::set_foreground_color(int r, int g, int b) {
+void set_foreground_color(int r, int g, int b) {
   printf("\033[38;2;%u;%u;%um", r, g, b);
 }
-void Terminal::set_background_color(int r, int g, int b) {
+void set_background_color(int r, int g, int b) {
   printf("\033[48;2;%u;%u;%um", r, g, b);
 }
 

@@ -31,6 +31,7 @@ int main() {
   Octree root(&config);
   root.fill("sphere", 100, false);
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
+  return 0;
   Clock clock(&config);
   Terminal terminal(&config);
   terminal.show_cursor(false);
@@ -49,7 +50,6 @@ int main() {
     camera.view_point.x = sin(cam_angle)*1.5+0.5;
     camera.view_point.y = cos(cam_angle)*1.5+0.5;
     camera.view_direction = (config.octree_center - camera.view_point).normalize();
-    camera.view_up = Vec3f(0.,0.,1.);
     cam_angle += 0.5*clock.frametime;
 
     clock.finished_frame();

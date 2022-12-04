@@ -15,14 +15,23 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
     if (skybox == nullptr) {
       skybox_enabled = false;
     }
-    float u = 0.81;
-    float v = 0.47;
-    u *= skybox_width;
-    v *= skybox_height;
-    RGB pixel = RGB(static_cast<int>(skybox[int(v*skybox_width*3 + u*3)]), 
-                    static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 1)]), 
-                    static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 2)]));
-    std::cout << "Pixel(10,10):  r(" << pixel.r << ") g(" << pixel.g << ") b(" << pixel.b << ")\n";
+    // try to print skybox just as an image 
+    #include "../include/terminal.hpp"
+    for (int y=100; y<pixelbuffer->height+100; y++) {
+      for (int x=100; x<pixelbuffer->width+100; x++) {
+        set_foreground_color(static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3)]),
+                             static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 1)]),
+                             static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 2)]));
+        set_background_color(static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]),
+                             static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]),
+                             static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
+        std::cout << "\u2584"; // print lower half block
+        if (x == pixelbuffer->width-1) {
+          y += 1;
+          std::cout << "\n";
+        }
+      }
+    }
   }
 }
 
@@ -55,8 +64,8 @@ RGB Renderer::trace_ray(Ray *ray) {
   } else {
     if (skybox_enabled) {
       /* Vec3f p = ray->point(ray->max_t); */
-      Vec3f p = ray->point(100);
-      Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
+      /* Vec3f p = ray->point(100); */
+      /* Vec3f d = (Vec3f(0.,0.,0.) - p).normalize(); */
       /* float u = 0.5 + atan2(d.x, d.y) / (2. * 3.141592); */
       /* float v = 0.5 + asin(d.z) / 3.141592; */
       float u = 0.5 + atan2(ray->direction.x, ray->direction.y) / (2. * 3.141592);
