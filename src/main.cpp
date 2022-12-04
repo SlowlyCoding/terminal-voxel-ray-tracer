@@ -11,7 +11,6 @@
 /*
 
   TODO:
-    Skybox UV mapping (read pixels from image)
     fix display bug
     fix whitespace before stats display
     try keyboard input with raw mode enabled
