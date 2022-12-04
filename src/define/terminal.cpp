@@ -19,7 +19,7 @@ void set_background_color(int r, int g, int b) {
   printf("\033[48;2;%u;%u;%um", r, g, b);
 }
 
-void Terminal::reset_coloring() {
+void reset_coloring() {
   std::cout << "\033[0m\t\t";
 }
 

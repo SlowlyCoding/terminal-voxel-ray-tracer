@@ -1,5 +1,4 @@
 #include <iostream>
-#include <chrono>
 #include "include/config.hpp"
 #include "include/terminal.hpp"
 #include "include/clock.hpp"
@@ -31,7 +30,6 @@ int main() {
   Octree root(&config);
   root.fill("sphere", 100, false);
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
-  return 0;
   Clock clock(&config);
   Terminal terminal(&config);
   terminal.show_cursor(false);
@@ -44,7 +42,6 @@ int main() {
     clock.finished_render();
     terminal.display(&pixelbuffer);
     clock.finished_display();
-    return 0;
 
     // maybe change this here to something like scene.update()
     camera.view_point.x = sin(cam_angle)*1.5+0.5;

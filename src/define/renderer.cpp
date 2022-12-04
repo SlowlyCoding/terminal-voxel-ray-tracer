@@ -16,22 +16,21 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
       skybox_enabled = false;
     }
     // try to print skybox just as an image 
-    #include "../include/terminal.hpp"
-    for (int y=100; y<pixelbuffer->height+100; y++) {
-      for (int x=100; x<pixelbuffer->width+100; x++) {
-        set_foreground_color(static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3)]),
-                             static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 1)]),
-                             static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 2)]));
-        set_background_color(static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]),
-                             static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]),
-                             static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
-        std::cout << "\u2584"; // print lower half block
-        if (x == pixelbuffer->width-1) {
-          y += 1;
-          std::cout << "\n";
-        }
-      }
-    }
+    /* #include "../include/terminal.hpp" */
+    /* for (int y=0; y<skybox_height; y+=skybox_height/100.) { */
+    /*   for (int x=0; x<skybox_width; x+=skybox_width/100.) { */
+    /*     set_foreground_color(static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3)]), */
+    /*                          static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 1)]), */
+    /*                          static_cast<int>(skybox[int((y+1)*skybox_width*3 + x*3 + 2)])); */
+    /*     set_background_color(static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), */
+    /*                          static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), */
+    /*                          static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)])); */
+    /*     std::cout << "\u2584"; // print lower half block */
+    /*   } */
+    /*   y+=skybox_height/100.; */
+    /*   std::cout << "\n"; */
+    /* } */
+    /* reset_coloring(); */
   }
 }
 
@@ -63,22 +62,15 @@ RGB Renderer::trace_ray(Ray *ray) {
     }
   } else {
     if (skybox_enabled) {
-      /* Vec3f p = ray->point(ray->max_t); */
-      /* Vec3f p = ray->point(100); */
-      /* Vec3f d = (Vec3f(0.,0.,0.) - p).normalize(); */
-      /* float u = 0.5 + atan2(d.x, d.y) / (2. * 3.141592); */
-      /* float v = 0.5 + asin(d.z) / 3.141592; */
-      float u = 0.5 + atan2(ray->direction.x, ray->direction.y) / (2. * 3.141592);
-      float v = 0.5 + asin(ray->direction.z) / 3.141592;
-      // use u,v to read from image
-      u *= skybox_width;
-      v *= skybox_height;
-      /* std::cout << "Pixel(10,10):  r(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3)]) << */
-      /*                           ") g(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3+1)]) << */
-      /*                           ") b(" << static_cast<int>(skybox[int(10*skybox_width*3 + 10*3+2)])<< ")\n"; */
-      pixel = RGB(static_cast<int>(skybox[int(v*skybox_width*3 + u*3)]), 
-                  static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 1)]), 
-                  static_cast<int>(skybox[int(v*skybox_width*3 + u*3 + 2)]));
+      Vec3f p = ray->point(ray->max_t);
+      Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
+      float u = 0.5 + atan2(d.x, d.y) / (2. * 3.141592);
+      float v = 0.5 + asin(d.z) / 3.141592;
+      int x = u*skybox_width;
+      int y = v*skybox_width;
+      pixel = RGB(static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), 
+                  static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), 
+                  static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
     }
   }
   return pixel;
