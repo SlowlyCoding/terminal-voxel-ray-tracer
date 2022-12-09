@@ -1,7 +1,4 @@
 #include "../include/octree.hpp"
-#include <ctime>
-#include <fstream>
-#include <sstream>
 
 Octree::Octree(
     float x_min, float y_min, float z_min,
