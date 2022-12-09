@@ -36,7 +36,7 @@ void Clock::display_performance() {
   frametime_str = std::to_string(frametime*1000);
   frametime_str = frametime_str.substr(0, frametime_str.find(".")+precision+1);
   
-  fps_str = std::string("\rFPS: ").append(std::to_string((int)(1/frametime))).append(std::string("   "));
+  fps_str = std::string("\rFPS: ").append(std::to_string((int)round((1/frametime)))).append(std::string("  "));
   rendertime_str = std::string("Render: ").append(rendertime_str).append(std::string("ms  "));
   displaytime_str = std::string("Display: ").append(displaytime_str).append(std::string("ms  "));
   frametime_str = std::string("Frame: ").append(frametime_str).append(std::string("ms  "));

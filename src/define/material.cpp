@@ -7,8 +7,9 @@ RGB::RGB(std::string color) {
     r=0; g=0; b=0;
   } else if (color == "white") {
     r=255; g=255; b=255;
-  } else if (color == "grey") {
-    r=138; g=138; b=138;
+  } else if (color == "random") {
+    /* srand(time(0)); */
+    r=(int)(rand()%256); g=(int)(rand()%256); b=(int)(rand()%256);
   } else if (color == "orange") {
     r=255; g=140; b=0;
   } else if (color == "purple") {

@@ -69,6 +69,9 @@ Octree::Octree(Config *config) {
   type = Parent;
   bounding_plane_d.assign(9, 0.);
   float half_side = config->octree_side_length/2.;
+  if (config->octree_center.x - half_side < 0. ||
+      config->octree_center.y - half_side < 0. ||
+      config->octree_center.z - half_side < 0.) { return; }
   bounding_plane_d[X_MIN] = config->octree_center.x-half_side;
   bounding_plane_d[Y_MIN] = config->octree_center.y-half_side;
   bounding_plane_d[Z_MIN] = config->octree_center.z-half_side;
@@ -209,40 +212,48 @@ void Octree::insert_vertex(Vertex v, bool debug) {
 void Octree::fill(std::string shape, int voxelcount, bool debug) {
   srand(time(0));
   if (shape == "cube") {
+    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
     for (int i=0; i<voxelcount; i++) {
       if (debug) std::cout << "Inserting Point\n";
       insert_vertex(
           Vertex(
-            Vec3f(float(rand())/float((RAND_MAX)), float(rand())/float((RAND_MAX)), float(rand())/float((RAND_MAX))), 
-            // random color
-            Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
-            //Material(RGB("orange"), 1.2, 0.2)
+            Vec3f(
+              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[X_MIN], 
+              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Y_MIN], 
+              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Z_MIN]), 
+            Material(RGB("random"), 1.2, 0.2)
             ), 
           debug);
     }
   } else if (shape == "sphere") {
+    float half_side = bounding_plane_d[X_MAX] - bounding_plane_d[X_MID];
     for (int i=0; i<voxelcount; i++) {
       float angle1 = float(rand())/float((RAND_MAX)) * 2.*3.1415;
       float angle2 = float(rand())/float((RAND_MAX)) * 3.1415;
       if (debug) std::cout << "Inserting Point\n";
       insert_vertex(
           Vertex(
-            Vec3f(0.5*cos(angle1)*sin(angle2)+0.5, 0.5*sin(angle1)*sin(angle2)+0.5, 0.5*cos(angle2)+0.5),
-            // random color
-            Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
+            Vec3f(
+              half_side*cos(angle1)*sin(angle2)+bounding_plane_d[X_MID], 
+              half_side*sin(angle1)*sin(angle2)+bounding_plane_d[Y_MID], 
+              half_side*cos(angle2)+bounding_plane_d[Z_MID]),
+            Material(RGB("random"), 1.2, 0.2)
             ), 
           debug);
     }
   } else if (shape == "cylinder") {
+    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
     for (int i=0; i<voxelcount; i++) {
       float angle = float(rand())/float((RAND_MAX)) * 2.*3.1415;
-      float height = float(rand())/float((RAND_MAX));
+      float height = float(rand())/float((RAND_MAX)) * side_length;
       if (debug) std::cout << "Inserting Point\n";
       insert_vertex(
           Vertex(
-            Vec3f(0.5+0.5*cos(angle), 0.5+0.5*sin(angle), height),
-            // random color
-            Material(RGB((int)(rand()%256), (int)(rand()%256), (int)(rand()%256)), 1.2, 0.2)
+            Vec3f(
+              cos(angle)*(side_length/2.)+bounding_plane_d[X_MID], 
+              sin(angle)*(side_length/2.)+bounding_plane_d[Y_MID], 
+              height),
+            Material(RGB("random"), 1.2, 0.2)
             ), 
           debug);
     }

@@ -11,6 +11,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
 
   skybox_enabled = config->renderer_skybox_enabled;
   if (skybox_enabled) {
+    std::cout << "loading in skybox...\n";
     skybox = stbi_load(config->renderer_skybox.c_str(), &skybox_width, &skybox_height, &skybox_channels, 3);
     if (skybox == nullptr) {
       skybox_enabled = false;
@@ -52,9 +53,10 @@ RGB Renderer::trace_ray(Ray *ray) {
       float v = 0.5 + asin(d.z) / 3.141592;
       int x = u*skybox_width;
       int y = v*skybox_height;
-      pixel = RGB(static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), 
-                  static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), 
-                  static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
+      pixel = RGB(
+          static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), 
+          static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), 
+          static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
     }
   }
   return pixel;

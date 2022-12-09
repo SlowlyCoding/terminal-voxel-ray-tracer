@@ -20,11 +20,11 @@ class Renderer {
     bool skybox_enabled;
     int skybox_width, skybox_height, skybox_channels;
     uint8_t* skybox;
-  public:
-    Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
     RGB trace_ray(Ray *ray);
+  public:
+    Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Renders the Scene by calcuating what character each pixel should display. */
     /* render_framepart() renders a specified part of the frame */
     void render_framepart(Vec3f pixel0, Vec3f pixel_step_x, Vec3f pixel_step_y, int thread_amount, int part);

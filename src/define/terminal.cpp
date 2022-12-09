@@ -4,7 +4,7 @@ Terminal::Terminal(Config *config) {
   display_mode = config->terminal_display_mode;
 }
 
-void Terminal::show_cursor(bool show) {
+void show_cursor(bool show) {
   if (show) {
     printf("\033[?25h");
   } else {
@@ -23,7 +23,7 @@ void reset_coloring() {
   std::cout << "\033[0m\t\t";
 }
 
-void Terminal::go_to(int x, int y) {
+void go_to(int x, int y) {
   std::cout << "\033[" << x << ";" << y << "H";
 }
 

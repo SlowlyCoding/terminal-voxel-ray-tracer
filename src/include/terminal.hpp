@@ -10,10 +10,10 @@ private:
   char grayscale[11] = " .:-=+*#%@";
 public:
   Terminal(Config *config);
-  void show_cursor(bool show);
-  void go_to(int x, int y);
   void display(PixelBuffer *pb);
 };
+void show_cursor(bool show);
+void go_to(int x, int y);
 void reset_coloring();
 void set_foreground_color(int r, int g, int b);
 void set_background_color(int r, int g, int b);

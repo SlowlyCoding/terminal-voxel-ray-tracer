@@ -1,9 +1,9 @@
 default:
-	g++ src/main.cpp -o output.out src/define/*.cpp -std=c++11 -pthread 
+	g++ src/main.cpp -o output.out src/define/*.cpp -pthread 
 	./output.out
 
 debug:
-	g++ src/main.cpp -o output.out -g src/define/*.cpp -std=c++11 -pthread 
+	g++ src/main.cpp -o output.out -g src/define/*.cpp -pthread 
 	gdb ./output.out
 
 clean:
