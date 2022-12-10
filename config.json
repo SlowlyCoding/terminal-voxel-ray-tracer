@@ -27,7 +27,7 @@
   },
 
   "renderer": {
-    "shadows_enabled": false,
+    "shadows_enabled": true,
     "skybox_enabled": true,
     "skybox": "assets/checkermap2.jpg"
   }
