@@ -2,6 +2,7 @@
 
 Terminal::Terminal(Config *config) {
   display_mode = config->terminal_display_mode;
+  grayscale = config->renderer_grayscale;
 }
 
 void show_cursor(bool show) {
@@ -46,8 +47,7 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
                              0.114*pixelbuffer->pixels[y][x][2];
           brightness /= 256.; // so that brightness ranges from 0 to 1
           // choose the corresponding brightness character from the grayscale array
-          std::cout << grayscale[(int)(brightness*10)];
-          // if end of frame reached, go to next line
+          std::cout << grayscale[(int)(brightness*grayscale.length())];
         }
         y += 1;
         std::cout << "\n";

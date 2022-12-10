@@ -1,15 +1,20 @@
 #include "../include/pixelbuffer.hpp"
 
 PixelBuffer::PixelBuffer(Config *config) {
-  if (config->terminal_fullscreen) {
-    // get terminal size
-    struct winsize w;
-    ioctl(STDOUT_FILENO,   TIOCGWINSZ, &w);
-    width = w.ws_col;
-    height = (w.ws_row-3)*2;
-  } else {
-    width = config->terminal_width;
-    height = config->terminal_height;
+  // get terminal size
+  struct winsize w;
+  ioctl(STDOUT_FILENO,   TIOCGWINSZ, &w);
+  width = w.ws_col;
+  height = (w.ws_row-3)*2;
+
+  if (!config->terminal_fullscreen) {
+    // if width and height in config.json are bigger than the terminal size don't use the values from config.json
+    if (config->terminal_width < width) {
+      width = config->terminal_width;
+    }
+    if (config->terminal_height < height) {
+      height = config->terminal_height;
+    }
   }
   // height can only be an even number
   if (height % 2 != 0) {

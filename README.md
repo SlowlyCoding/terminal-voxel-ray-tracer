@@ -1,6 +1,7 @@
 # Terminal Voxel Ray Tracer
 
 Introduction text
+This ray tracer only works on unix system, but im sure that with some small tweaks to `terminal.cpp` it would work just as well on windows.
 
 <p align="center">
 <img src="https://github.com/SlowlyCoding/voxel_ray_tracer/blob/master/showcase/video.gif">
@@ -68,6 +69,8 @@ Everything that is configurable can be found in `config.json`
   },
 
   "renderer": {
+    // grayscale used for display_mode 0
+    "grayscale": " .:-=+*#%@",
     "shadows_enabled": true,
     "skybox_enabled": true,
     "skybox": "assets/checkermap2.jpg"

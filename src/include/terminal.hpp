@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include "clock.hpp"
 #include "config.hpp"
 #include "pixelbuffer.hpp"
@@ -7,7 +8,7 @@
 class Terminal {
 private:
   int display_mode; 
-  char grayscale[11] = " .:-=+*#%@";
+  std::string grayscale = " .:-=+*#%@";
 public:
   Terminal(Config *config);
   void display(PixelBuffer *pb);
