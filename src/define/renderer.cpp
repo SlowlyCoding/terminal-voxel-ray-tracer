@@ -68,7 +68,7 @@ void Renderer::render_framepart(
   int y = pixelbuffer->height * (1./thread_amount) * part;
   int y_max = pixelbuffer->height * (1./thread_amount) * (part+1);
   // go through each pixel of that part and call trace_ray()
-  for (y; y<y_max; y++) {
+  for (; y<y_max; y++) {
     for (int x=0; x<pixelbuffer->width; x++) {
       Vec3f pixel = pixel0 + pixel_step_x*x + pixel_step_y*y;
       Ray ray(camera->view_point, pixel.normalize());

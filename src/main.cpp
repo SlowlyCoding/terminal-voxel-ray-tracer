@@ -27,6 +27,14 @@ int main() {
   Camera camera(&config);
   Octree root(&config);
   root.fill("sphere", 100, false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.45), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.45), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.45), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.55), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.55), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.55), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.55), Material(RGB("white"), 1.2, 0.2, "reflective", 1.0)), false);
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
   Terminal terminal(&config);
