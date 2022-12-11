@@ -4,7 +4,7 @@ I started this project to learn more about voxels, a little bit of research led 
 
 I had already had some experience with console graphics so I made this ray tracer output to the terminal as well.
 
-Down the line I also want to move the calculations to the GPU using CUDA or OpenCL, this would allow me to experiment with bigger octrees and more demanding scenes.
+Down the line I want to move the calculations to the GPU using CUDA or OpenCL, this would allow me to experiment with bigger octrees and more demanding scenes.
 
 This ray tracer only works on unix system, but im sure that with some small tweaks to `terminal.cpp` it would work just as well on windows.
 

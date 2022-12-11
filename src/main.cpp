@@ -13,9 +13,8 @@
 
   TODO:
     create 2 buffers and only display the pixels which have changed (less set_color calls)
+    or use double buffering so that render() doesn't have to wait until display() is finished
     maybe create scene class and store camera, objects, ... in there
-    fix octree.fill() so the values arent hardcoded
-    random color in material.cpp
 
 */
 
