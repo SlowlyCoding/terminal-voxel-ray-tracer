@@ -4,7 +4,7 @@
     "width": 120,
     "height": 102,
     "display_mode": 1,
-    "fps_limit_enabled": true,
+    "fps_limit_enabled": false,
     "fps_limit": 60
   },
 

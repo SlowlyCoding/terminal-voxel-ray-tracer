@@ -4,9 +4,6 @@
 #include "clock.hpp"
 #include "config.hpp"
 #include "pixelbuffer.hpp"
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 class Terminal {
 private:
