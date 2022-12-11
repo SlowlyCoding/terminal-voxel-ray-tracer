@@ -6,11 +6,20 @@ Terminal::Terminal(Config *config) {
 }
 
 void show_cursor(bool show) {
+#ifdef linux
   if (show) {
     printf("\033[?25h");
   } else {
     printf("\033[?25l");
   }
+#endif
+
+#ifdef _WIN32
+  HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_CURSOR_INFO info;
+  info.bVisible = show;
+  SetConsoleCursorInfo(consoleHandle, &info);
+#endif
 }
 
 void set_foreground_color(int r, int g, int b) {

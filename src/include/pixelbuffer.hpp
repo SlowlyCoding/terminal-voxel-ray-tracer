@@ -1,8 +1,15 @@
 #pragma once
 #include "config.hpp"
+#include <vector>
+
+#ifdef linux
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <vector>
+#endif
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 class PixelBuffer {
 public:
