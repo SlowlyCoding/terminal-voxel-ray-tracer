@@ -22,7 +22,7 @@ class Renderer {
     uint8_t* skybox;
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
-    RGB trace_ray(Ray *ray);
+    RGBi trace_ray(Ray *ray);
   public:
     Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Renders the Scene by calcuating what character each pixel should display. */

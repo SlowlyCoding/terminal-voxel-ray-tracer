@@ -19,12 +19,12 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   }
 }
 
-RGB Renderer::trace_ray(Ray *ray) {
-  RGB pixel("background");
+RGBi Renderer::trace_ray(Ray *ray) {
+  RGBi pixel("background");
   intersection_information ii;
   if (octree->intersection(ray, &ii)) {
     if (ii.material.type == "normal") {
-      pixel = RGB((ii.normal.x+1.)*127.5, (ii.normal.y+1.)*127.5, (ii.normal.z+1.)*127.5);
+      pixel = RGBi((ii.normal.x+1.)*127.5, (ii.normal.y+1.)*127.5, (ii.normal.z+1.)*127.5);
     } else if (ii.material.type == "reflective") {
       // if the object that we just hit is reflective we shoot a new ray from that intersection point
       Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
@@ -33,9 +33,9 @@ RGB Renderer::trace_ray(Ray *ray) {
     } else {
       // if the object is not refelctive we do shading
       Vec3f l = (light - ii.point).normalize();
-      RGB diffuse = ii.material.color * ii.material.diffuse * std::max(0.f,dot(ii.normal, l));
+      RGBi diffuse = ii.material.color * ii.material.diffuse * std::max(0.f,dot(ii.normal, l));
       Vec3f bisector = l + ray->direction*-1;
-      RGB specular = ii.material.color * ii.material.specular * std::max(0.f,dot(ii.normal, bisector));
+      RGBi specular = ii.material.color * ii.material.specular * std::max(0.f,dot(ii.normal, bisector));
       pixel = pixel + diffuse + specular;
       if (shadows_enabled) {
         // if the ray going to the light hits anything, the pixel is in shade
@@ -53,7 +53,7 @@ RGB Renderer::trace_ray(Ray *ray) {
       float v = 0.5 + asin(d.z) / 3.141592;
       int x = u*skybox_width;
       int y = v*skybox_height;
-      pixel = RGB(
+      pixel = RGBi(
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), 
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), 
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
@@ -72,7 +72,7 @@ void Renderer::render_framepart(
     for (int x=0; x<pixelbuffer->width; x++) {
       Vec3f pixel = pixel0 + pixel_step_x*x + pixel_step_y*y;
       Ray ray(camera->view_point, pixel.normalize());
-      RGB pixel_color = trace_ray(&ray);
+      RGBi pixel_color = trace_ray(&ray);
       pixel_color.normalize();
       pixelbuffer->pixels[y][x][0] = pixel_color.r;
       pixelbuffer->pixels[y][x][1] = pixel_color.g;

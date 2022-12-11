@@ -11,7 +11,7 @@
 class Terminal {
 private:
   int display_mode; 
-  std::string grayscale = " .:-=+*#%@";
+  std::string grayscale;
 public:
   Terminal(Config *config);
   void display(PixelBuffer *pb);

@@ -1,36 +1,36 @@
 #pragma once
 #include <string>
 
-class RGB {
+class RGBi {
 public:
   int r,g,b;
-  RGB() : r(0), g(0), b(0) {};
-  RGB(int r, int g, int b) : r(r), g(g), b(b) {};
-  RGB(std::string color);
-  friend RGB operator + (RGB color1, RGB color2);
-  friend RGB operator - (RGB color1, RGB color2);
-  friend RGB operator * (RGB color, int n);
-  friend RGB operator * (RGB color, float n);
-  friend RGB operator / (RGB color, int n);
-  friend RGB operator / (RGB color, float n);
+  RGBi() : r(0), g(0), b(0) {};
+  RGBi(int r, int g, int b) : r(r), g(g), b(b) {};
+  RGBi(std::string color);
+  friend RGBi operator + (RGBi color1, RGBi color2);
+  friend RGBi operator - (RGBi color1, RGBi color2);
+  friend RGBi operator * (RGBi color, int n);
+  friend RGBi operator * (RGBi color, float n);
+  friend RGBi operator / (RGBi color, int n);
+  friend RGBi operator / (RGBi color, float n);
   void normalize();
   void invert();
 };
 
 class Material {
 public:
-  RGB color;
+  RGBi color;
   float diffuse;
   float specular;
   std::string type = "none";
   float reflection_factor;
   // none
-  Material() : color(RGB("black")), diffuse(0.) {};
+  Material() : color(RGBi("black")), diffuse(0.) {};
   // normal color
-  Material(RGB color, float diffuse, float specular) : 
+  Material(RGBi color, float diffuse, float specular) : 
     color(color), diffuse(diffuse), specular(specular) {};
   // refelctive, refractive
-  Material(RGB color, float diffuse, float specular, std::string type, float factor) : 
+  Material(RGBi color, float diffuse, float specular, std::string type, float factor) : 
     color(color), diffuse(diffuse), specular(specular), type(type) {
     if (type == "reflective") {
       reflection_factor = factor;

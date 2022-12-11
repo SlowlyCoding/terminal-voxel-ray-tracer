@@ -1,6 +1,6 @@
 #include "../include/material.hpp"
 
-RGB::RGB(std::string color) {
+RGBi::RGBi(std::string color) {
   if (color == "background") {
     r=22; g=22; b=22;
   } else if (color == "black") {
@@ -21,31 +21,31 @@ RGB::RGB(std::string color) {
   }
 }
 
-RGB operator + (RGB color1, RGB color2) {
-  return RGB(color1.r+color2.r, color1.g+color2.g, color1.b+color2.b);
+RGBi operator + (RGBi color1, RGBi color2) {
+  return RGBi(color1.r+color2.r, color1.g+color2.g, color1.b+color2.b);
 } 
-RGB operator - (RGB color1, RGB color2) {
-  return RGB(color1.r-color2.r, color1.g-color2.g, color1.b-color2.b);
+RGBi operator - (RGBi color1, RGBi color2) {
+  return RGBi(color1.r-color2.r, color1.g-color2.g, color1.b-color2.b);
 } 
-RGB operator * (RGB color, int s) {
-  return RGB(color.r*s, color.g*s, color.b*s);
+RGBi operator * (RGBi color, int s) {
+  return RGBi(color.r*s, color.g*s, color.b*s);
 } 
-RGB operator * (RGB color, float s) {
-  return RGB(color.r*s, color.g*s, color.b*s);
+RGBi operator * (RGBi color, float s) {
+  return RGBi(color.r*s, color.g*s, color.b*s);
 } 
-RGB operator / (RGB color, int s) {
-  return RGB(color.r/s, color.g/s, color.b/s);
+RGBi operator / (RGBi color, int s) {
+  return RGBi(color.r/s, color.g/s, color.b/s);
 } 
-RGB operator / (RGB color, float s) {
-  return RGB(color.r/s, color.g/s, color.b/s);
+RGBi operator / (RGBi color, float s) {
+  return RGBi(color.r/s, color.g/s, color.b/s);
 } 
 
-void RGB::normalize() {
+void RGBi::normalize() {
   if (r<0) {r=0;} else if (r>255) {r=255;}
   if (g<0) {g=0;} else if (g>255) {g=255;}
   if (b<0) {b=0;} else if (b>255) {b=255;}
 }
-void RGB::invert() {
+void RGBi::invert() {
   normalize();
   r = 255-r; g = 255-g; b = 255-b; 
 }
