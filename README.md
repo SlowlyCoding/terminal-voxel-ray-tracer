@@ -1,6 +1,11 @@
 # Terminal Voxel Ray Tracer
 
-Introduction text
+I started this project to learn more about voxels, a little bit of research led me to sparse voxel octrees for storing voxels that dont change their position a lot, which is what I used here.
+
+I had already had some experience with console graphics so I made this ray tracer output to the terminal as well.
+
+Down the line I also want to move the calculations to the GPU using CUDA or OpenCL, this would allow me to experiment with bigger octrees and more demanding scenes.
+
 This ray tracer only works on unix system, but im sure that with some small tweaks to `terminal.cpp` it would work just as well on windows.
 
 <p align="center">
@@ -24,6 +29,8 @@ make
 ## Configuration
 
 Everything that is configurable can be found in `config.json`
+
+An explanation of the config file:
 ```cpp
 {
   "terminal": {

@@ -82,6 +82,7 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
       }
       break;
     default:
+      system("clear");
       std::cout << "display_modes:\n0 - ascii\n1 - colored ANSI\n";
   };
   reset_coloring();

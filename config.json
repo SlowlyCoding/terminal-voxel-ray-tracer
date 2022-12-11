@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": true,
+    "fullscreen": false,
     "width": 120,
     "height": 102,
     "display_mode": 1,
@@ -27,7 +27,6 @@
   },
 
   "renderer": {
-    "grayscale": " .'`^,:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$",
     "grayscale": " .:-=+*#%@",
     "shadows_enabled": true,
     "skybox_enabled": true,
