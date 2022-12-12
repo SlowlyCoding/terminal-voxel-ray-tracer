@@ -1,12 +1,14 @@
 # Terminal Voxel Ray Tracer
 
-I started this project to learn more about voxels, a little bit of research led me to sparse voxel octrees for storing voxels that dont change their position a lot, which is what I used here.
+I started this project to learn more about voxels, a bit of research led me to sparse voxel octrees for storing voxels that don't change their position a lot, which is what I used here.
 
-I had already had some experience with console graphics so I made this ray tracer output to the terminal as well.
+I had already had some experience with console graphics, so I made this ray tracer output to the terminal as well.
 
 Down the line I want to move the calculations to the GPU using CUDA or OpenCL, this would allow me to experiment with bigger octrees and more demanding scenes.
 
-This ray tracer only works on unix system, but im sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on windows.
+This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
+
+I as to be.
 
 <p align="center">
 <img src="https://github.com/SlowlyCoding/voxel_ray_tracer/blob/master/showcase/video.gif">
