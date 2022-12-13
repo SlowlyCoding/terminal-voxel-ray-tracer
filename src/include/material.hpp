@@ -31,7 +31,7 @@ public:
   float specular;
   /*
     reflection factor [ 0-1 ]
-      determines how much % of the incoming light gets reflected if Material Type is reflective or refractive
+      determines how much % of the incoming light gets reflected if MaterialType is reflective or refractive
   */
   float reflection_factor;
 
