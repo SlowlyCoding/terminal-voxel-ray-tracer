@@ -1,9 +1,9 @@
 {
   "terminal": {
-    "fullscreen": false,
+    "fullscreen": true,
     "width": 120,
     "height": 102,
-    "display_mode": 1,
+    "display_mode": 2,
     "fps_limit_enabled": false,
     "fps_limit": 60
   },

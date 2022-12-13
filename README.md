@@ -8,8 +8,6 @@ Down the line I want to move the calculations to the GPU using CUDA or OpenCL, t
 
 This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
 
-I as to be.
-
 <p align="center">
 <img src="https://github.com/SlowlyCoding/voxel_ray_tracer/blob/master/showcase/video.gif">
 <img src="https://github.com/SlowlyCoding/voxel_ray_tracer/blob/master/showcase/video2.gif">
@@ -44,8 +42,9 @@ An explanation of the config file:
     "width": 120,
     "height": 102,
     // display_mode 0 - ASCII
-    // display_mode 1 - colored ANSI
-    "display_mode": 1, 
+    // display_mode 1 - colored ASCII
+    // display_mode 2 - colored ANSI
+    "display_mode": 2, 
     // limiting FPS
     "fps_limit_enabled": true,
     "fps_limit": 60
