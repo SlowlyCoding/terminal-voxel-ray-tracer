@@ -14,26 +14,33 @@ public:
   friend RGBi operator / (RGBi color, int n);
   friend RGBi operator / (RGBi color, float n);
   void normalize();
-  void invert();
+};
+
+enum MaterialType {
+  standard,
+  normal, // rgb of surface color is xyz of surface normal vector
+  reflective,
+  refractive
 };
 
 class Material {
 public:
+  MaterialType type;
   RGBi color;
   float diffuse;
   float specular;
-  std::string type = "none";
+  /*
+    reflection factor [ 0-1 ]
+      determines how much % of the incoming light gets reflected if Material Type is reflective or refractive
+  */
   float reflection_factor;
+
   // none
-  Material() : color(RGBi("black")), diffuse(0.) {};
-  // normal color
-  Material(RGBi color, float diffuse, float specular) : 
-    color(color), diffuse(diffuse), specular(specular) {};
-  // refelctive, refractive
-  Material(RGBi color, float diffuse, float specular, std::string type, float factor) : 
-    color(color), diffuse(diffuse), specular(specular), type(type) {
-    if (type == "reflective") {
-      reflection_factor = factor;
-    }
-  };
+  Material() : type(normal) {};
+  // standard or normal
+  Material(MaterialType type, RGBi color, float diffuse, float specular) :
+    type(type), color(color), diffuse(diffuse), specular(specular) {};
+  // reflective or refractive
+  Material(MaterialType type, RGBi color, float diffuse, float specular, float reflection_factor) :
+    type(type), color(color), diffuse(diffuse), specular(specular), reflection_factor(reflection_factor) {};
 };

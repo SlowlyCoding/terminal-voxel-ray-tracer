@@ -23,9 +23,9 @@ RGBi Renderer::trace_ray(Ray *ray) {
   RGBi pixel("background");
   intersection_information ii;
   if (octree->intersection(ray, &ii)) {
-    if (ii.material.type == "normal") {
+    if (ii.material.type == normal) {
       pixel = RGBi((ii.normal.x+1.)*127.5, (ii.normal.y+1.)*127.5, (ii.normal.z+1.)*127.5);
-    } else if (ii.material.type == "reflective") {
+    } else if (ii.material.type == reflective) {
       // if the object that we just hit is reflective we shoot a new ray from that intersection point
       Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
       Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
