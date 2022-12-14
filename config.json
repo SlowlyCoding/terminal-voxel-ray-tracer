@@ -1,10 +1,10 @@
 {
   "terminal": {
-    "fullscreen": true,
+    "fullscreen": false,
     "width": 120,
     "height": 102,
     "display_mode": 2,
-    "fps_limit_enabled": false,
+    "fps_limit_enabled": true,
     "fps_limit": 60
   },
 
@@ -12,7 +12,7 @@
     "view_point": [ 1.5, -0.5, 0.5 ],
     "view_angle_x": 0.01,
     "view_angle_z": 3.1415,
-    "fov": 55
+    "fov": 12
   }, 
 
   "octree": {

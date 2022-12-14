@@ -46,6 +46,13 @@ RGBi Renderer::trace_ray(Ray *ray) {
       break;
     }
     case refractive: {
+      float theta = acos(abs(dot(ii.normal, ray->direction) / ii.normal.length()*ray->direction.length()));
+      float n_air = 1;
+      float n_glass = 1.5;
+      Vec3f refracted_ray_direction = ray->direction*n_air/n_glass + ii.normal * 
+        (float)(n_air/n_glass*cos(theta) - sqrt(1 - pow(n_air/n_glass,2)*(1-cos(theta)*cos(theta))));
+      Ray refracted_ray(ii.point + refracted_ray_direction*0.11f, refracted_ray_direction);
+      pixel = trace_ray(&refracted_ray);
       break;
     }
     case normal: {

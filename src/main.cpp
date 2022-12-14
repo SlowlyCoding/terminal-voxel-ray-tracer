@@ -12,8 +12,7 @@
 /*
 
   TODO:
-    restructure material class
-    improve display_mode 1
+    improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
     maybe create scene class and store camera, objects, ... in there
@@ -28,15 +27,15 @@ int main() {
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
   Octree root(&config);
-  root.fill("sphere", 100, false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.45), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.45), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.45), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.55), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.55), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.55), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.55), Material(reflective, RGBi("white"), 0.9, 0.2, 1.0)), false);
+  //root.fill("sphere", 100, false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
   Terminal terminal(&config);
