@@ -2,19 +2,10 @@
 
 PixelBuffer::PixelBuffer(Config *config) {
   // get terminal size
-#ifdef linux
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   width = w.ws_col;
   height = (w.ws_row-3)*2;
-#endif
-#ifdef _WIN32
-  CONSOLE_SCREEN_BUFFER_INFO csbi;
-  int columns, rows;
-  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-  width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-  height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-#endif
 
   if (!config->terminal_fullscreen) {
     // if width and height in config.json are bigger than the terminal size don't use the values from config.json
