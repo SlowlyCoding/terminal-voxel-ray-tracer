@@ -257,6 +257,21 @@ void Octree::fill(std::string shape, int voxelcount, Material *material, bool de
             ), 
           debug);
     }
+  } else if (shape == "grid") {
+    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
+    for (int z=1; z<=voxelcount; z++) {
+      for (int y=1; y<=voxelcount; y++) {
+        for (int x=1; x<=voxelcount; x++) {
+          if (debug) std::cout << "Inserting Point\n";
+          insert_vertex(
+              Vertex(
+                Vec3f(x/(float)voxelcount,y/(float)voxelcount,z/(float)voxelcount),
+                  material
+                ), 
+              debug);
+        }
+      }
+    }
   }
 }
 

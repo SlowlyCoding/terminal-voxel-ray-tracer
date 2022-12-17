@@ -9,6 +9,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   light = config->light_position;
   shadows_enabled = config->renderer_shadows_enabled;
   max_ray_bounces = config->renderer_max_ray_bounces;
+  std::cout << "Using " << thread_amount << " threads\n";
 
   skybox_enabled = config->renderer_skybox_enabled;
   if (skybox_enabled) {
@@ -42,7 +43,7 @@ RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
     case reflective: {
       if (max_ray_bounces > 0) {
         Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
-        Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
+        Ray reflected_ray(ii.point + reflected_ray_direction*0.01f, reflected_ray_direction);
         pixel = ii.material->color*(1.f-ii.material->reflectance) + trace_ray(&reflected_ray, max_ray_bounces-1) * ii.material->reflectance;
       } else {
         pixel = RGBi("black");
@@ -131,7 +132,6 @@ void Renderer::threaded_render() {
   Vec3f pixel_step_y = half_screen_y / ((float)pixelbuffer->height/2);
 
   // each thread renders its own part of the frame
-  int thread_amount = std::thread::hardware_concurrency();
   std::vector<std::thread> threads;
   for (int i=0; i<thread_amount; i++) {
     threads.push_back(std::thread(&Renderer::render_framepart, this, pixel0, pixel_step_x, pixel_step_y, thread_amount, i));
