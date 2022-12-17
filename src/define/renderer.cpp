@@ -23,7 +23,6 @@ RGBi Renderer::trace_ray(Ray *ray) {
   RGBi pixel("background");
   intersection_information ii;
   if (octree->intersection(ray, &ii)) {
-
     switch (ii.material.type) {
     case standard: {
       Vec3f l = (light - ii.point).normalize();
@@ -46,13 +45,31 @@ RGBi Renderer::trace_ray(Ray *ray) {
       break;
     }
     case refractive: {
-      float theta = acos(abs(dot(ii.normal, ray->direction) / ii.normal.length()*ray->direction.length()));
-      float n_air = 1;
-      float n_glass = 1.5;
-      Vec3f refracted_ray_direction = ray->direction*n_air/n_glass + ii.normal * 
-        (float)(n_air/n_glass*cos(theta) - sqrt(1 - pow(n_air/n_glass,2)*(1-cos(theta)*cos(theta))));
-      Ray refracted_ray(ii.point + refracted_ray_direction*0.11f, refracted_ray_direction);
-      pixel = trace_ray(&refracted_ray);
+      Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
+      Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
+
+      float n1 = 1.0; // air
+      float n2 = ii.material.refractive_index;
+      if (ii.inside_voxel) std::swap(n1, n2);
+      float n = n1 / n2;
+
+      float cosI = -dot(ii.normal, ray->direction);
+      float sinT2 = n*n*(1.0-cosI*cosI);
+      if (sinT2 > 1.0) { // total internal reflection
+        // reflectance is 1
+        pixel = trace_ray(&reflected_ray);
+        break;
+      }
+      float cosT = sqrt(1.0 - sinT2);
+
+      float rOrth = (n1*cosI-n2*cosT)/(n1*cosI+n2*cosT);
+      float rPar = (n2*cosI -n1*cosT)/(n2*cosI+n1*cosT);
+      float reflectance = (rOrth*rOrth+rPar*rPar)/2.0;
+
+      Vec3f refracted_ray_direction = ray->direction+ii.normal*(n*cosI-cosT);
+      Ray refracted_ray(ii.point + refracted_ray_direction*0.15f, refracted_ray_direction);
+
+      pixel = trace_ray(&reflected_ray)*reflectance+trace_ray(&refracted_ray)*(1.0f-reflectance);
       break;
     }
     case normal: {
@@ -60,30 +77,6 @@ RGBi Renderer::trace_ray(Ray *ray) {
       break;
     }
     }
-
-    /* if (ii.material.type == normal) { */
-    /*   pixel = RGBi((ii.normal.x+1.)*127.5, (ii.normal.y+1.)*127.5, (ii.normal.z+1.)*127.5); */
-    /* } else if (ii.material.type == reflective) { */
-    /*   // if the object that we just hit is reflective we shoot a new ray from that intersection point */
-    /*   Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal); */
-    /*   Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction); */
-    /*   pixel = ii.material.color*(1.f-ii.material.reflection_factor) + trace_ray(&reflected_ray) * ii.material.reflection_factor; */
-    /* } else { */
-    /*   // if the object is not refelctive we do shading */
-    /*   Vec3f l = (light - ii.point).normalize(); */
-    /*   RGBi diffuse = ii.material.color * ii.material.diffuse * std::max(0.f,dot(ii.normal, l)); */
-    /*   Vec3f bisector = l + ray->direction*-1; */
-    /*   RGBi specular = ii.material.color * ii.material.specular * std::max(0.f,dot(ii.normal, bisector)); */
-    /*   pixel = pixel + diffuse + specular; */
-    /*   if (shadows_enabled) { */
-    /*     // if the ray going to the light hits anything, the pixel is in shade */
-    /*     Ray light_ray(ii.point+l*0.005f, l); */
-    /*     if (octree->intersection(&light_ray, &ii)) { */
-    /*       pixel = pixel * 0.2f; */
-    /*     } */ 
-    /*   } */ 
-    /* } */
-
   } else {
     if (skybox_enabled) { // ray did not hit any object
       Vec3f p = ray->point(ray->max_t);

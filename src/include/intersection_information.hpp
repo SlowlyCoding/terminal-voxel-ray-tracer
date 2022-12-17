@@ -7,4 +7,5 @@ struct intersection_information {
   Vec3f point; 
   Vec3f normal;
   Material material;
+  bool inside_voxel;
 };

@@ -34,6 +34,7 @@ public:
       determines how much % of the incoming light gets reflected if MaterialType is reflective or refractive
   */
   float reflection_factor;
+  float refractive_index = 1.5;
 
   // none
   Material() : type(normal) {};

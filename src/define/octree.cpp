@@ -365,8 +365,16 @@ bool Octree::intersection(Ray *ray, intersection_information *ii) {
         }
         // child is point node -> return intersection information
         else if (children[child_order[i]]->type != Leaf) {
-          ii->t = t_min_child;
-          ii->point = ray->point(t_min_child);
+          // check if view_point is inside the voxel
+          if (t_min_child != 0.0) {
+            ii->inside_voxel = false;
+            ii->t = t_min_child;
+            ii->point = ray->point(t_min_child);
+          } else {
+            ii->inside_voxel = true;
+            ii->t = t_max_child;
+            ii->point = ray->point(t_max_child);
+          }
           ii->material = children[child_order[i]]->v.material;
           Vec3f cube_center(
               children[child_order[i]]->bounding_plane_d[X_MID], 
