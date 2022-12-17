@@ -5,7 +5,7 @@ PixelBuffer::PixelBuffer(Config *config) {
   struct winsize w;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   width = w.ws_col;
-  height = (w.ws_row-3)*2;
+  height = (w.ws_row-2)*2;
 
   if (!config->terminal_fullscreen) {
     // if width and height in config.json are bigger than the terminal size don't use the values from config.json

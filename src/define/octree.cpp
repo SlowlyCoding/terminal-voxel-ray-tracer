@@ -209,7 +209,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
   }
 }
 
-void Octree::fill(std::string shape, int voxelcount, bool debug) {
+void Octree::fill(std::string shape, int voxelcount, Material *material, bool debug) {
   srand(time(0));
   if (shape == "cube") {
     float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
@@ -221,7 +221,7 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
               float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[X_MIN], 
               float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Y_MIN], 
               float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Z_MIN]), 
-            Material(standard, RGBi("random"), 1.2, 0.2)
+            material
             ), 
           debug);
     }
@@ -237,7 +237,7 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
               half_side*cos(angle1)*sin(angle2)+bounding_plane_d[X_MID], 
               half_side*sin(angle1)*sin(angle2)+bounding_plane_d[Y_MID], 
               half_side*cos(angle2)+bounding_plane_d[Z_MID]),
-            Material(standard, RGBi("random"), 1.2, 0.2)
+            material
             ), 
           debug);
     }
@@ -253,35 +253,9 @@ void Octree::fill(std::string shape, int voxelcount, bool debug) {
               cos(angle)*(side_length/2.)+bounding_plane_d[X_MID], 
               sin(angle)*(side_length/2.)+bounding_plane_d[Y_MID], 
               height),
-            Material(standard, RGBi("random"), 1.2, 0.2)
+              material
             ), 
           debug);
-    }
-  } else if (shape == "bunny") {
-    // open bunny file
-    std::ifstream file;
-    file.open("models/bunny.txt");
-    if (!file.is_open()) {
-      std::cout << "error opening file\n";
-    }
-    // read file sperated by whitespace
-    std::string coordinate;
-    float coordinates[3];
-    int i = 0;
-    while(std::getline(file, coordinate, ' ')) {
-      // coordinate string to float and adjust the size of the coordinates to fit inside 0 - 1
-      coordinates[i] = (std::stof(coordinate)+100.)/180.;
-      if (i == 2) {
-        i = 0;
-        insert_vertex(
-            Vertex(
-              Vec3f(coordinates[0], 1-coordinates[1], 1-coordinates[2]),
-              Material(standard, RGBi("orange"), 1.2, 0.2)
-              ), 
-            debug);
-      } else {
-        i++;
-      }
     }
   }
 }
@@ -394,6 +368,9 @@ bool Octree::intersection(Ray *ray, intersection_information *ii) {
             } else {
               ii->normal = Vec3f(0.,0.,round(cti.z)); 
             }
+          }
+          if (t_min_child == 0.0) {
+            ii->normal = ii->normal*-1.f;
           }
           return true;
         }

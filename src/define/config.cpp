@@ -29,6 +29,7 @@ Config::Config(std::string config_file_name) {
                          data["light"]["position"][1], 
                          data["light"]["position"][2]);
 
+  renderer_max_ray_bounces = data["renderer"]["max_ray_bounces"];
   renderer_grayscale = data["renderer"]["grayscale"];
   renderer_shadows_enabled = data["renderer"]["shadows_enabled"];
   renderer_skybox_enabled = data["renderer"]["skybox_enabled"];

@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": false,
+    "fullscreen": true,
     "width": 120,
     "height": 102,
     "display_mode": 2,
@@ -12,7 +12,7 @@
     "view_point": [ 1.5, -0.5, 0.5 ],
     "view_angle_x": 0.01,
     "view_angle_z": 3.1415,
-    "fov": 45
+    "fov": 35
   }, 
 
   "octree": {
@@ -27,8 +27,9 @@
   },
 
   "renderer": {
+    "max_ray_bounces": 10,
     "grayscale": " .:-=+*#%@",
-    "shadows_enabled": true,
+    "shadows_enabled": false,
     "skybox_enabled": true,
     "skybox": "assets/checkermap2.jpg"
   }

@@ -6,6 +6,6 @@ struct intersection_information {
   float t;
   Vec3f point; 
   Vec3f normal;
-  Material material;
+  Material *material;
   bool inside_voxel;
 };

@@ -44,3 +44,14 @@ void RGBi::normalize() {
   if (g<0) {g=0;} else if (g>255) {g=255;}
   if (b<0) {b=0;} else if (b>255) {b=255;}
 }
+
+Material new_material_standard(RGBi color, float diffuse, float specular) {
+  return Material(standard, color, diffuse, specular, 0.0, 0.0);
+}
+Material new_material_reflective(RGBi color, float diffuse, float specular, float reflectance) {
+  return Material(reflective, color, diffuse, specular, reflectance, 0.0);
+}
+Material new_material_refractive(float refraction_index) {
+  return Material(refractive, RGBi(), 0.0, 0.0, 0.0, refraction_index);
+
+}

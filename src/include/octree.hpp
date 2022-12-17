@@ -58,7 +58,7 @@ class Octree {
     Octree(Config *config);
     // inserts a point into the octree by splitting each node which contains more than 1 point, thus creating the Octree
     void insert_vertex(Vertex v, bool debug);
-    void fill(std::string shape, int voxelcount, bool debug);
+    void fill(std::string shape, int voxelcount, Material *material, bool debug);
     int count_voxels();
     bool intersection(Ray *ray, intersection_information *ii);
 };

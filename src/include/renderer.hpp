@@ -16,14 +16,15 @@ class Renderer {
     Octree *octree;
     Vec3f light;
     bool shadows_enabled;
+    int max_ray_bounces;
 
     bool skybox_enabled;
     int skybox_width, skybox_height, skybox_channels;
     uint8_t* skybox;
     /* Traces a ray through the scene and and returns the "color" of that pixel. */
     /* In this ray tracer colors are displayed using characters */
-    RGBi trace_ray(Ray *ray);
   public:
+    RGBi trace_ray(Ray *ray, int max_ray_bounces);
     Renderer(Config *config, PixelBuffer *pixelbuffer, Camera *_camera, Octree *_octree);
     /* Renders the Scene by calcuating what character each pixel should display. */
     /* render_framepart() renders a specified part of the frame */

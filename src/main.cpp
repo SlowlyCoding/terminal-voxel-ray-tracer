@@ -12,7 +12,7 @@
 /*
 
   TODO:
-    refractive objects dont cause shadows -> to fix
+    refractive objects dont cause shadows -> fix
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
@@ -21,28 +21,26 @@
 */
 
 int main() {
-  // parse config file
+  /* parse config file */
   Config config("config.json");
 
-  // init everything
+  /* init everything and create octree */
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
+
+  Material glass = new_material_refractive(1.5);
+  Material mirror = new_material_reflective(RGBi("white"), 0.9, 0.2, 0.95);
+  Material orange = new_material_standard(RGBi("orange"), 0.9, 0.2);
   Octree root(&config);
-  root.fill("sphere", 100, false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.45), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.45,0.55,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.45,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
-  root.insert_vertex(Vertex(Vec3f(0.55,0.55,0.55), Material(refractive, RGBi("white"), 0.9, 0.2, 0.95)), false);
+  root.fill("cylinder", 50, &mirror, false);
+  root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), &glass), false);
+
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
   Terminal terminal(&config);
   show_cursor(false);
 
-  // main loop
+  /* main loop */
   float cam_angle = 0; // rad
   while (cam_angle < 4.25*PI) {
     clock.start();

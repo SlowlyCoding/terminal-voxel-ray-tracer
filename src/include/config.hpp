@@ -28,6 +28,7 @@ public:
 
   Vec3f light_position;
 
+  int renderer_max_ray_bounces;
   std::string renderer_grayscale;
   bool renderer_shadows_enabled;
   bool renderer_skybox_enabled;

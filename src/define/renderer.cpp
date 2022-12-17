@@ -8,6 +8,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   octree = _octree;
   light = config->light_position;
   shadows_enabled = config->renderer_shadows_enabled;
+  max_ray_bounces = config->renderer_max_ray_bounces;
 
   skybox_enabled = config->renderer_skybox_enabled;
   if (skybox_enabled) {
@@ -19,16 +20,16 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   }
 }
 
-RGBi Renderer::trace_ray(Ray *ray) {
+RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
   RGBi pixel("background");
   intersection_information ii;
   if (octree->intersection(ray, &ii)) {
-    switch (ii.material.type) {
+    switch (ii.material->type) {
     case standard: {
       Vec3f l = (light - ii.point).normalize();
-      RGBi diffuse = ii.material.color * ii.material.diffuse * std::max(0.f,dot(ii.normal, l));
+      RGBi diffuse = ii.material->color * ii.material->diffuse * std::max(0.f,dot(ii.normal, l));
       Vec3f bisector = l + ray->direction*-1;
-      RGBi specular = ii.material.color * ii.material.specular * std::max(0.f,dot(ii.normal, bisector));
+      RGBi specular = ii.material->color * ii.material->specular * std::max(0.f,dot(ii.normal, bisector));
       pixel = pixel + diffuse + specular;
       if (shadows_enabled) {
         Ray light_ray(ii.point+l*0.005f, l);
@@ -39,37 +40,44 @@ RGBi Renderer::trace_ray(Ray *ray) {
       break;
     }
     case reflective: {
-      Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
-      Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
-      pixel = ii.material.color*(1.f-ii.material.reflection_factor) + trace_ray(&reflected_ray) * ii.material.reflection_factor;
+      if (max_ray_bounces > 0) {
+        Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
+        Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
+        pixel = ii.material->color*(1.f-ii.material->reflectance) + trace_ray(&reflected_ray, max_ray_bounces-1) * ii.material->reflectance;
+      } else {
+        pixel = RGBi("black");
+      }
       break;
     }
     case refractive: {
-      Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
-      Ray reflected_ray(ii.point + reflected_ray_direction*0.11f, reflected_ray_direction);
+      if (max_ray_bounces > 0) {
+        Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
+        Ray reflected_ray(ii.point + reflected_ray_direction*0.01f, reflected_ray_direction);
 
-      float n1 = 1.0; // air
-      float n2 = ii.material.refractive_index;
-      if (ii.inside_voxel) std::swap(n1, n2);
-      float n = n1 / n2;
+        float n1 = 1.0; // air
+        float n2 = ii.material->refractive_index;
+        if (ii.inside_voxel) std::swap(n1, n2);
+        float n = n1 / n2;
 
-      float cosI = -dot(ii.normal, ray->direction);
-      float sinT2 = n*n*(1.0-cosI*cosI);
-      if (sinT2 > 1.0) { // total internal reflection
-        // reflectance is 1
-        pixel = trace_ray(&reflected_ray);
-        break;
+        float cosI = -dot(ii.normal, ray->direction);
+        float sinT2 = n*n*(1.0-cosI*cosI);
+        if (sinT2 > 1.0) { // total internal reflection
+          pixel = trace_ray(&reflected_ray, max_ray_bounces-1);
+          break;
+        }
+        float cosT = sqrt(1.0 - sinT2);
+
+        float rOrth = (n1*cosI-n2*cosT)/(n1*cosI+n2*cosT);
+        float rPar = (n2*cosI -n1*cosT)/(n2*cosI+n1*cosT);
+        float reflectance = (rOrth*rOrth+rPar*rPar)/2.0;
+
+        Vec3f refracted_ray_direction = ray->direction*n+ii.normal*(n*cosI-cosT);
+        Ray refracted_ray(ii.point + refracted_ray_direction*0.01f, refracted_ray_direction);
+
+        pixel = trace_ray(&reflected_ray, max_ray_bounces-1)*reflectance+trace_ray(&refracted_ray, max_ray_bounces-1)*(1.0f-reflectance);
+      } else {
+        pixel = RGBi("black");
       }
-      float cosT = sqrt(1.0 - sinT2);
-
-      float rOrth = (n1*cosI-n2*cosT)/(n1*cosI+n2*cosT);
-      float rPar = (n2*cosI -n1*cosT)/(n2*cosI+n1*cosT);
-      float reflectance = (rOrth*rOrth+rPar*rPar)/2.0;
-
-      Vec3f refracted_ray_direction = ray->direction+ii.normal*(n*cosI-cosT);
-      Ray refracted_ray(ii.point + refracted_ray_direction*0.15f, refracted_ray_direction);
-
-      pixel = trace_ray(&reflected_ray)*reflectance+trace_ray(&refracted_ray)*(1.0f-reflectance);
       break;
     }
     case normal: {
@@ -77,8 +85,8 @@ RGBi Renderer::trace_ray(Ray *ray) {
       break;
     }
     }
-  } else {
-    if (skybox_enabled) { // ray did not hit any object
+  } else { // ray did not hit any objects
+    if (skybox_enabled) {
       Vec3f p = ray->point(ray->max_t);
       Vec3f d = (Vec3f(0.,0.,0.) - p).normalize();
       float u = 0.5 + atan2(d.x, d.y) / (2. * 3.141592);
@@ -104,7 +112,7 @@ void Renderer::render_framepart(
     for (int x=0; x<pixelbuffer->width; x++) {
       Vec3f pixel = pixel0 + pixel_step_x*x + pixel_step_y*y;
       Ray ray(camera->view_point, pixel.normalize());
-      RGBi pixel_color = trace_ray(&ray);
+      RGBi pixel_color = trace_ray(&ray, max_ray_bounces);
       pixel_color.normalize();
       pixelbuffer->pixels[y][x][0] = pixel_color.r;
       pixelbuffer->pixels[y][x][1] = pixel_color.g;
