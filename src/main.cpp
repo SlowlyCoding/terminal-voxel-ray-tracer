@@ -32,7 +32,9 @@ int main() {
   Material mirror = new_material_reflective(RGBi("white"), 0.9, 0.2, 0.95);
   Material orange = new_material_standard(RGBi("orange"), 0.9, 0.2);
   Octree root(&config);
-  root.fill("cylinder", 100, &orange, false);
+  root.fill("cylinder", 5, &glass, false);
+  sleep(1);
+  root.fill("cylinder", 15, &orange, false);
   /* root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), &glass), false); */
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);

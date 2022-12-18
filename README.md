@@ -68,7 +68,6 @@ An explanation of the config file:
     "depth": 4,
     // same_voxel_size true
     //    voxels will always be stored at the deepest level, 
-    //    meaning they will all be of the same size
     "same_voxel_size": true
   },
 
@@ -77,7 +76,8 @@ An explanation of the config file:
   },
 
   "renderer": {
-    // grayscale used for display_mode 0
+    "max_ray_bounces": 10,
+    // ASCII grayscale used for display_mode 0 and 1
     "grayscale": " .:-=+*#%@",
     "shadows_enabled": true,
     "skybox_enabled": true,

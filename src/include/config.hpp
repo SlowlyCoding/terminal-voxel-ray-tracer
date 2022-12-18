@@ -31,8 +31,9 @@ public:
   int renderer_max_ray_bounces;
   std::string renderer_grayscale;
   bool renderer_shadows_enabled;
-  bool renderer_skybox_enabled;
-  std::string renderer_skybox;
+
+  bool skybox_enabled;
+  std::string skybox_file;
 
   Config(std::string config_file_name);
 };

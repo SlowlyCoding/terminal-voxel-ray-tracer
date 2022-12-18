@@ -11,10 +11,10 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   max_ray_bounces = config->renderer_max_ray_bounces;
   std::cout << "Using " << thread_amount << " threads\n";
 
-  skybox_enabled = config->renderer_skybox_enabled;
+  skybox_enabled = config->skybox_enabled;
   if (skybox_enabled) {
     std::cout << "loading in skybox...\n";
-    skybox = stbi_load(config->renderer_skybox.c_str(), &skybox_width, &skybox_height, &skybox_channels, 3);
+    skybox = stbi_load(config->skybox_file.c_str(), &skybox_width, &skybox_height, &skybox_channels, 3);
     if (skybox == nullptr) {
       skybox_enabled = false;
     }
