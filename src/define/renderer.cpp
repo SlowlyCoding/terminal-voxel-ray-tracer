@@ -44,7 +44,8 @@ RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
       if (max_ray_bounces > 0) {
         Vec3f reflected_ray_direction = ray->direction - ii.normal * 2.f*dot(ray->direction,ii.normal);
         Ray reflected_ray(ii.point + reflected_ray_direction*0.01f, reflected_ray_direction);
-        pixel = ii.material->color*(1.f-ii.material->reflectance) + trace_ray(&reflected_ray, max_ray_bounces-1) * ii.material->reflectance;
+        pixel = ii.material->color*ii.material->tint_strength + 
+                trace_ray(&reflected_ray, max_ray_bounces-1) * (1.0f-ii.material->tint_strength);
       } else {
         pixel = RGBi("black");
       }
@@ -75,7 +76,10 @@ RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
         Vec3f refracted_ray_direction = ray->direction*n+ii.normal*(n*cosI-cosT);
         Ray refracted_ray(ii.point + refracted_ray_direction*0.01f, refracted_ray_direction);
 
+        // mix reflection and refraction
         pixel = trace_ray(&reflected_ray, max_ray_bounces-1)*reflectance+trace_ray(&refracted_ray, max_ray_bounces-1)*(1.0f-reflectance);
+        // add a color to that mix
+        pixel = pixel*(1.0f-ii.material->tint_strength)+ii.material->color*ii.material->tint_strength;
       } else {
         pixel = RGBi("black");
       }

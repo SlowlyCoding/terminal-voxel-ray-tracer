@@ -1,10 +1,10 @@
 {
   "terminal": {
-    "fullscreen": false,
+    "fullscreen": true,
     "width": 120,
     "height": 102,
     "display_mode": 2,
-    "fps_limit_enabled": false,
+    "fps_limit_enabled": true,
     "fps_limit": 60
   },
 
@@ -29,7 +29,7 @@
   "renderer": {
     "max_ray_bounces": 10,
     "grayscale": " .:-=+*#%@",
-    "shadows_enabled": true
+    "shadows_enabled": false
   },
 
   "skybox": {

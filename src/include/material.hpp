@@ -29,11 +29,8 @@ public:
   RGBi color;
   float diffuse;
   float specular;
-  /*
-    reflectance [ 0-1 ]
-      determines how much % of the incoming light gets reflected if MaterialType is reflective
-  */
-  float reflectance;
+  // determines how much % of the incoming light gets reflected
+  float tint_strength; // [0-1]
   /*
     refractive_index
       air = 1.0
@@ -43,10 +40,10 @@ public:
   float refractive_index;
 
   Material() : type(normal) {};
-  Material(MaterialType type, RGBi color, float diffuse, float specular, float reflectance, float refractive_index) :
-    type(type), color(color), diffuse(diffuse), specular(specular), reflectance(reflectance), refractive_index(refractive_index) {};
+  Material(MaterialType type, RGBi color, float diffuse, float specular, float tint_strength, float refractive_index) :
+    type(type), color(color), diffuse(diffuse), specular(specular), tint_strength(tint_strength), refractive_index(refractive_index) {};
 };
 
 Material new_material_standard(RGBi color, float diffuse, float specular);
-Material new_material_reflective(RGBi color, float diffuse, float specular, float reflectance);
-Material new_material_refractive(float refraction_index);
+Material new_material_reflective(RGBi tint, float tint_strength);
+Material new_material_refractive(RGBi tint, float tint_strength, float refractive_index);
