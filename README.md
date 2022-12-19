@@ -71,8 +71,9 @@ An explanation of the config file:
     "same_voxel_size": true
   },
 
-  "light": {
-    "position": [ 20, -10, 30 ]
+  "lighting": {
+    "pointlight_position": [[ 20, -10, 30 ],
+                            [ -20, 10, -30 ]]
   },
 
   "renderer": {

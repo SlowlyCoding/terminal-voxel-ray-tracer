@@ -26,7 +26,6 @@ public:
   int octree_depth;
   bool octree_same_voxel_size;
 
-  Vec3f light_position;
   std::vector<Vec3f> lights;
 
   int renderer_max_ray_bounces;

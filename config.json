@@ -22,9 +22,8 @@
     "same_voxel_size": true
   },
 
-  "light": {
-    "positions": [[ 20, -10, 30 ],
-                  [ -20, 10, -30 ]]
+  "lighting": {
+    "pointlight_positions": [[ 20, -10, 30 ]]
   },
 
   "renderer": {

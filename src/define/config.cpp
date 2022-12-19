@@ -25,7 +25,7 @@ Config::Config(std::string config_file_name) {
   octree_depth = data["octree"]["depth"];
   octree_same_voxel_size = data["octree"]["same_voxel_size"];
 
-  std::vector<json> positions = data["light"]["positions"];
+  std::vector<json> positions = data["lighting"]["pointlight_positions"];
   for (int i=0; i<positions.size(); i++) {
     lights.push_back(Vec3f(positions[i][0], positions[i][1], positions[i][2]));
   }
