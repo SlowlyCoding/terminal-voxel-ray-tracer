@@ -6,7 +6,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   pixelbuffer = _pixelbuffer;
   camera = _camera;
   octree = _octree;
-  light = config->light_position;
+  lights = config->lights;
   shadows_enabled = config->renderer_shadows_enabled;
   max_ray_bounces = config->renderer_max_ray_bounces;
   std::cout << "Using " << thread_amount << " threads\n";
@@ -22,22 +22,27 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
 }
 
 RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
-  RGBi pixel("background");
+  RGBi pixel;
   intersection_information ii;
-  if (octree->intersection(ray, &ii)) {
+  if (octree->intersection(ray, &ii, false)) {
     switch (ii.material->type) {
     case standard: {
-      Vec3f l = (light - ii.point).normalize();
-      RGBi diffuse = ii.material->color * ii.material->diffuse * std::max(0.f,dot(ii.normal, l));
-      Vec3f bisector = l + ray->direction*-1;
-      RGBi specular = ii.material->color * ii.material->specular * std::max(0.f,dot(ii.normal, bisector));
-      pixel = pixel + diffuse + specular;
-      if (shadows_enabled) {
-        Ray light_ray(ii.point+l*0.005f, l);
-        if (octree->intersection(&light_ray, &ii)) {
-          pixel = pixel * 0.2f;
+      RGBi color;
+      for (int i=0; i<lights.size(); i++) {
+        Vec3f l = (lights[i] - ii.point).normalize();
+        RGBi diffuse = ii.material->color * ii.material->diffuse * std::max(0.f,dot(ii.normal, l));
+        Vec3f bisector = l + ray->direction*-1;
+        RGBi specular = ii.material->color * ii.material->specular * std::max(0.f,dot(ii.normal, bisector));
+        color = color + diffuse + specular;
+        if (shadows_enabled) {
+          Ray light_ray(ii.point+l*0.001f, l);
+          if (octree->intersection(&light_ray, &ii, true)) {
+            color = color * 0.5f;
+          } 
         } 
-      } 
+        pixel = pixel + color;
+      }
+      pixel = pixel / (float)lights.size();
       break;
     }
     case reflective: {
@@ -102,6 +107,8 @@ RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3)]), 
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 1)]), 
           static_cast<int>(skybox[int(y*skybox_width*3 + x*3 + 2)]));
+    } else {
+      pixel = RGBi("background");
     }
   }
   return pixel;

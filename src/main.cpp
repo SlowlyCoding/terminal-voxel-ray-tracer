@@ -12,7 +12,6 @@
 /*
 
   TODO:
-    refractive objects dont cause shadows -> fix
     octree fill from config file
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
@@ -29,14 +28,13 @@ int main() {
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
 
-  Material glass = new_material_refractive(RGBi("black"), 0.1, 1.5);
+  Material glass = new_material_refractive(RGBi("white"), 0.1, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material orange = new_material_standard(RGBi("orange"), 0.9, 0.2);
   Octree root(&config);
-  root.fill("cylinder", 5, &glass, false);
-  sleep(1);
-  root.fill("cylinder", 15, &orange, false);
-  /* root.insert_vertex(Vertex(Vec3f(0.45,0.45,0.45), &glass), false); */
+  /* root.fill("cylinder", 5, &glass, false); */
+  /* sleep(1); */
+  root.fill("cylinder", 10, &orange, false);
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);

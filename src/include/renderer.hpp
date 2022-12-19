@@ -15,7 +15,7 @@ class Renderer {
     PixelBuffer *pixelbuffer;
     Camera *camera;
     Octree *octree;
-    Vec3f light;
+    std::vector<Vec3f> lights;
 
     /* settings */
     int thread_amount = std::thread::hardware_concurrency();

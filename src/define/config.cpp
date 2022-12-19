@@ -19,15 +19,16 @@ Config::Config(std::string config_file_name) {
   camera_fov = data["camera"]["fov"];
 
   octree_center = Vec3f(data["octree"]["center"][0], 
-                                 data["octree"]["center"][1], 
-                                 data["octree"]["center"][2]);
+                        data["octree"]["center"][1], 
+                        data["octree"]["center"][2]);
   octree_side_length = data["octree"]["side_length"];
   octree_depth = data["octree"]["depth"];
   octree_same_voxel_size = data["octree"]["same_voxel_size"];
 
-  light_position = Vec3f(data["light"]["position"][0], 
-                         data["light"]["position"][1], 
-                         data["light"]["position"][2]);
+  std::vector<json> positions = data["light"]["positions"];
+  for (int i=0; i<positions.size(); i++) {
+    lights.push_back(Vec3f(positions[i][0], positions[i][1], positions[i][2]));
+  }
 
   renderer_max_ray_bounces = data["renderer"]["max_ray_bounces"];
   renderer_grayscale = data["renderer"]["grayscale"];

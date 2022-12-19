@@ -325,7 +325,7 @@ bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
 }
 
 // returns closest point node that the ray hit
-bool Octree::intersection(Ray *ray, intersection_information *ii) {
+bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_solids) {
   // first check if ray hits octree root
   float t_min, t_max;
   if (ray_hit_node(ray, &t_min, &t_max)) {
@@ -348,12 +348,15 @@ bool Octree::intersection(Ray *ray, intersection_information *ii) {
       if (children[child_order[i]]->ray_hit_node(ray, &t_min_child, &t_max_child)) {
         // child is parent node -> go deeper into octree
         if (children[child_order[i]]->type == Parent) {
-          bool intersected = children[child_order[i]]->intersection(ray, ii);
+          bool intersected = children[child_order[i]]->intersection(ray, ii, only_solids);
           if (intersected) return true;
           // if nothing returned true, continue with next child
         }
         // child is point node -> return intersection information
         else if (children[child_order[i]]->type != Leaf) {
+          if (only_solids && children[child_order[i]]->v.material->type == refractive) {
+            continue;
+          }
           // check if view_point is inside the voxel
           if (t_min_child != 0.0) {
             ii->inside_voxel = false;
