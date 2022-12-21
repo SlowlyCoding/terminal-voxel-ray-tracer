@@ -30,7 +30,7 @@ int main() {
 
   Material glass = new_material_refractive(RGBi("purple"), 0.3, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
-  Material orange = new_material_standard(RGBi("orange"), 0.9, 0.2);
+  Material orange = new_material_standard(RGBi("orange"), 0.3, 0.8);
   Octree root(&config);
   root.fill("sphere", 3, &glass, false);
   sleep(1);

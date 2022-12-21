@@ -74,7 +74,6 @@ An explanation of the config file:
   "lighting": {
     // [ x, y, z, light intensity ]
     "pointlights": [[ 10, 10, 20, 2 ],
-                    [ -10, -10, 20, 2 ],
                     [ -10, -10, -20, 2 ]]
   },
 
