@@ -16,10 +16,10 @@ class Renderer {
     Camera *camera;
     Octree *octree;
     std::vector<Vec3f> lights;
+    std::vector<float> light_intensities;
 
     /* settings */
     int thread_amount = std::thread::hardware_concurrency();
-    bool shadows_enabled;
     int max_ray_bounces;
 
     /* skybox */

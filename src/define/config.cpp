@@ -25,14 +25,14 @@ Config::Config(std::string config_file_name) {
   octree_depth = data["octree"]["depth"];
   octree_same_voxel_size = data["octree"]["same_voxel_size"];
 
-  std::vector<json> positions = data["lighting"]["pointlight_positions"];
-  for (int i=0; i<positions.size(); i++) {
-    lights.push_back(Vec3f(positions[i][0], positions[i][1], positions[i][2]));
+  std::vector<json> light_data = data["lighting"]["pointlights"];
+  for (int i=0; i<light_data.size(); i++) {
+    lights.push_back(Vec3f(light_data[i][0], light_data[i][1], light_data[i][2]));
+    light_intensities.push_back(light_data[i][3]);
   }
 
   renderer_max_ray_bounces = data["renderer"]["max_ray_bounces"];
   renderer_grayscale = data["renderer"]["grayscale"];
-  renderer_shadows_enabled = data["renderer"]["shadows_enabled"];
 
   skybox_enabled = data["skybox"]["enabled"];
   skybox_file = data["skybox"]["file"];

@@ -27,10 +27,10 @@ public:
   bool octree_same_voxel_size;
 
   std::vector<Vec3f> lights;
+  std::vector<float> light_intensities;
 
   int renderer_max_ray_bounces;
   std::string renderer_grayscale;
-  bool renderer_shadows_enabled;
 
   bool skybox_enabled;
   std::string skybox_file;

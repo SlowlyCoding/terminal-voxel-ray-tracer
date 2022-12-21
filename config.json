@@ -23,13 +23,14 @@
   },
 
   "lighting": {
-    "pointlight_positions": [[ 20, -10, 30 ]]
+    "pointlights": [[ 10, 10, 20, 2 ],
+                    [ -10, -10, 20, 2 ],
+                    [ -10, -10, -20, 2 ]]
   },
 
   "renderer": {
     "max_ray_bounces": 5,
-    "grayscale": " .:-=+*#%@",
-    "shadows_enabled": true
+    "grayscale": " .:-=+*#%@"
   },
 
   "skybox": {

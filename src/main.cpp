@@ -28,13 +28,15 @@ int main() {
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
 
-  Material glass = new_material_refractive(RGBi("white"), 0.1, 1.5);
+  Material glass = new_material_refractive(RGBi("purple"), 0.3, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material orange = new_material_standard(RGBi("orange"), 0.9, 0.2);
   Octree root(&config);
-  /* root.fill("cylinder", 5, &glass, false); */
-  /* sleep(1); */
-  root.fill("cylinder", 10, &orange, false);
+  root.fill("sphere", 3, &glass, false);
+  sleep(1);
+  root.fill("sphere", 3, &mirror, false);
+  sleep(1);
+  root.fill("sphere", 20, &orange, false);
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);

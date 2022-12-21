@@ -72,15 +72,16 @@ An explanation of the config file:
   },
 
   "lighting": {
-    "pointlight_position": [[ 20, -10, 30 ],
-                            [ -20, 10, -30 ]]
+    // [ x, y, z, light intensity ]
+    "pointlights": [[ 10, 10, 20, 2 ],
+                    [ -10, -10, 20, 2 ],
+                    [ -10, -10, -20, 2 ]]
   },
 
   "renderer": {
     "max_ray_bounces": 10,
     // ASCII grayscale used for display_mode 0 and 1
-    "grayscale": " .:-=+*#%@",
-    "shadows_enabled": true
+    "grayscale": " .:-=+*#%@"
   }
 
   "skybox": {

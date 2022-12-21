@@ -7,7 +7,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
   camera = _camera;
   octree = _octree;
   lights = config->lights;
-  shadows_enabled = config->renderer_shadows_enabled;
+  light_intensities = config->light_intensities;
   max_ray_bounces = config->renderer_max_ray_bounces;
   std::cout << "Using " << thread_amount << " threads\n";
 
@@ -22,25 +22,26 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
 }
 
 RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
-  RGBi pixel;
+  RGBi pixel("background");
   intersection_information ii;
   if (octree->intersection(ray, &ii, false)) {
     switch (ii.material->type) {
     case standard: {
-      RGBi color;
       for (int i=0; i<lights.size(); i++) {
-        Vec3f l = (lights[i] - ii.point).normalize();
-        RGBi diffuse = ii.material->color * ii.material->diffuse * std::max(0.f,dot(ii.normal, l));
-        Vec3f bisector = l + ray->direction*-1;
-        RGBi specular = ii.material->color * ii.material->specular * std::max(0.f,dot(ii.normal, bisector));
-        color = color + diffuse + specular;
-        if (shadows_enabled) {
-          Ray light_ray(ii.point+l*0.001f, l);
-          if (octree->intersection(&light_ray, &ii, true)) {
-            color = color * 0.5f;
-          } 
-        } 
-        pixel = pixel + color;
+        Vec3f l = lights[i] - ii.point;
+        float r = l.length();
+        l = l.normalize();
+        // check if surface is in shade
+        Ray light_ray(ii.point, l);
+        if (dot(ii.normal,l) > 0) light_ray.origin = ii.point+l*0.01f;
+        else light_ray.origin = ii.point-l*0.01f;
+        if (octree->intersection(&light_ray, &ii, true)) {
+          pixel = pixel + ii.material->color*0.5f;
+          continue;
+        }
+        // calculate light
+        float Ld = ii.material->diffuse*(light_intensities[i]/r*r)*std::max(0.0f,dot(ii.normal,l));
+        pixel = pixel + ii.material->color*Ld;
       }
       pixel = pixel / (float)lights.size();
       break;
