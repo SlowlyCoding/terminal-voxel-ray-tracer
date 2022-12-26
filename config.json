@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": true,
+    "fullscreen": false,
     "width": 120,
     "height": 102,
     "display_mode": 2,
@@ -34,6 +34,6 @@
 
   "skybox": {
     "enabled": true,
-    "file": "assets/checkermap.jpg"
+    "file": "assets/studio.jpg"
   }
 }

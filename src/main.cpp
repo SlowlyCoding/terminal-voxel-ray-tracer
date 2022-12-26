@@ -12,6 +12,7 @@
 /*
 
   TODO:
+    look at fmt library, maybe its faster than cout
     octree fill from config file
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
