@@ -33,14 +33,10 @@ int main() {
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material orange = new_material_standard(RGBi("green"), 0.3, 0.8);
   Octree root(&config);
-  /* srand(0); */
-  /* root.fill("sphere", 3, &glass, false); */
-  /* srand(10); */
-  /* root.fill("sphere", 3, &mirror, false); */
-  /* srand(2); */
-  /* root.fill("sphere", 20, &orange, false); */
-  root.fill("sphere", 50000, &mirror, false);
-  std::cout << "Voxels inserted: " << root.count_voxels() << std::endl;
+  std::cout << "filling octree...";
+  root.fill("sphere", 50000, &orange, false);
+  std::cout << "done!\n";
+  std::cout << root.count_voxels() << " Voxels inserted\n";
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);

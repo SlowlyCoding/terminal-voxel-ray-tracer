@@ -11,7 +11,7 @@ Octree::Octree(Vec3f _center, float _radius, Vertex _v) {
   center = _center;
   radius = _radius;
 }
-Octree::Octree(Vec3f _center, float _radius, int _max_depth) {
+Octree::Octree(Vec3f _center, float _radius, int _current_height) {
   type = Parent;
   center = _center;
   radius = _radius;
@@ -26,7 +26,7 @@ Octree::Octree(Vec3f _center, float _radius, int _max_depth) {
         radius/2.0f
     );
   }
-  max_depth = _max_depth;
+  current_height = _current_height;
 }
 Octree::Octree(Config *config) {
   type = Parent;
@@ -46,12 +46,12 @@ Octree::Octree(Config *config) {
         radius/2.0f
     );
   }
-  max_depth = config->octree_depth;
+  current_height = config->octree_depth;
 }
 
 void Octree::insert_vertex(Vertex v, bool debug) {
   // check if the tree is deep enough
-  if (max_depth == 0) {
+  if (current_height == 0) {
     if (debug) std::cout << "Max tree depth reached\n";
     return;
   }
@@ -83,7 +83,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
       else child = 7;
     }
   }
-  if (debug) std::cout << "  " << max_depth << " tree height, child " << child << " - ";
+  if (debug) std::cout << "  " << current_height << " tree height, child " << child << " - ";
 
   // child is parent node -> go deeper into octree
   if (children[child]->type == Parent) {
@@ -91,10 +91,10 @@ void Octree::insert_vertex(Vertex v, bool debug) {
     children[child]->insert_vertex(v, debug);
     return;
   }
-  // if voxels can be of different sizes
+  // if voxels can be of different sizes (SVO true)
   // child is leaf node -> set node to point node
   //
-  // if voxels are set to be of the same size
+  // if voxels are set to be of the same size (SVO false)
   // child is leaf node -> set node to parent node until max tree depth reached, 
   //                       then set to point node
   else if (children[child]->type == Leaf) {
@@ -102,7 +102,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
     delete children[child];
     std::bitset<3> child_bitset(child);
     if (!SVO) {
-      if (max_depth > 1) {
+      if (current_height > 1) {
         children[child] = new Octree(
             Vec3f(
               child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
@@ -110,7 +110,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
               child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
             ), 
             radius/2.0f,
-            max_depth-1
+            current_height-1
         );
         if (debug) std::cout << "is Parent Node\n";
         children[child]->insert_vertex(v, debug);
@@ -160,7 +160,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
           child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
         ), 
         radius/2.0f,
-        max_depth-1
+        current_height-1
     );
     if (debug) std::cout << "is Parent Node\n  Inserting Point 1\n";
     children[child]->insert_vertex(v_present, debug);
@@ -243,7 +243,6 @@ int Octree::count_voxels() {
   return voxel_count;
 }
 
-// intersect a ray with the root node and changes inputted _t_min and _t_max if hit
 bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
   // slab method
   float t_min = ray->min_t; 
@@ -279,7 +278,6 @@ bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
   return false;
 }
 
-// returns closest point node that the ray hit
 bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_solids) {
   // first check if ray hits octree root
   float t_min, t_max;
