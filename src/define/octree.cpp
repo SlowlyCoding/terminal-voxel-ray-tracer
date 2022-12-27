@@ -1,100 +1,52 @@
 #include "../include/octree.hpp"
 
-Octree::Octree(
-    float x_min, float y_min, float z_min,
-    float x_max, float y_max, float z_max
-    ) {
+Octree::Octree(Vec3f _center, float _radius) {
   type = Leaf;
-  bounding_plane_d.assign(9, 0.);
-  bounding_plane_d[X_MIN] = x_min;
-  bounding_plane_d[Y_MIN] = y_min;
-  bounding_plane_d[Z_MIN] = z_min;
-  bounding_plane_d[X_MID] = (x_min+x_max)/2.;
-  bounding_plane_d[Y_MID] = (y_min+y_max)/2.;
-  bounding_plane_d[Z_MID] = (z_min+z_max)/2.;
-  bounding_plane_d[X_MAX] = x_max;
-  bounding_plane_d[Y_MAX] = y_max;
-  bounding_plane_d[Z_MAX] = z_max;
+  center = _center;
+  radius = _radius;
 }
-Octree::Octree(
-    float x_min, float y_min, float z_min,
-    float x_max, float y_max, float z_max,
-    Vertex _v
-    ) {
+Octree::Octree(Vec3f _center, float _radius, Vertex _v) {
   type = Point;
   v = _v;
-  bounding_plane_d.assign(9, 0.);
-  bounding_plane_d[X_MIN] = x_min;
-  bounding_plane_d[Y_MIN] = y_min;
-  bounding_plane_d[Z_MIN] = z_min;
-  bounding_plane_d[X_MID] = (x_min+x_max)/2.;
-  bounding_plane_d[Y_MID] = (y_min+y_max)/2.;
-  bounding_plane_d[Z_MID] = (z_min+z_max)/2.;
-  bounding_plane_d[X_MAX] = x_max;
-  bounding_plane_d[Y_MAX] = y_max;
-  bounding_plane_d[Z_MAX] = z_max;
+  center = _center;
+  radius = _radius;
 }
-Octree::Octree(
-    float x_min, float y_min, float z_min,
-    float x_max, float y_max, float z_max,
-    int _max_depth, bool _same_voxel_size
-    ) {
+Octree::Octree(Vec3f _center, float _radius, int _max_depth) {
   type = Parent;
-  bounding_plane_d.assign(9, 0.);
-  bounding_plane_d[X_MIN] = x_min;
-  bounding_plane_d[Y_MIN] = y_min;
-  bounding_plane_d[Z_MIN] = z_min;
-  bounding_plane_d[X_MID] = (x_min+x_max)/2.;
-  bounding_plane_d[Y_MID] = (y_min+y_max)/2.;
-  bounding_plane_d[Z_MID] = (z_min+z_max)/2.;
-  bounding_plane_d[X_MAX] = x_max;
-  bounding_plane_d[Y_MAX] = y_max;
-  bounding_plane_d[Z_MAX] = z_max;
-  children.assign(8, nullptr);
+  center = _center;
+  radius = _radius;
   for (int i=0; i<8; i++) {
     std::bitset<3> child_bitset(i);
     children[i] = new Octree(
-        (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-        (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-        (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-        (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-        (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-        (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID]
-        );
+        Vec3f(
+          child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+          child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+          child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+        ), 
+        radius/2.0f
+    );
   }
   max_depth = _max_depth;
-  same_voxel_size = _same_voxel_size;
 }
 Octree::Octree(Config *config) {
   type = Parent;
-  bounding_plane_d.assign(9, 0.);
-  float half_side = config->octree_side_length/2.;
-  if (config->octree_center.x - half_side < 0. ||
-      config->octree_center.y - half_side < 0. ||
-      config->octree_center.z - half_side < 0.) { return; }
-  bounding_plane_d[X_MIN] = config->octree_center.x-half_side;
-  bounding_plane_d[Y_MIN] = config->octree_center.y-half_side;
-  bounding_plane_d[Z_MIN] = config->octree_center.z-half_side;
-  bounding_plane_d[X_MID] = config->octree_center.x;
-  bounding_plane_d[Y_MID] = config->octree_center.y;
-  bounding_plane_d[Z_MID] = config->octree_center.z;
-  bounding_plane_d[X_MAX] = config->octree_center.x+half_side;
-  bounding_plane_d[Y_MAX] = config->octree_center.y+half_side;
-  bounding_plane_d[Z_MAX] = config->octree_center.z+half_side;
-  children.assign(8, nullptr);
+  radius = config->octree_side_length/2.;
+  if (config->octree_center.x - radius < 0. ||
+      config->octree_center.y - radius < 0. ||
+      config->octree_center.z - radius < 0.) { return; }
+  center = config->octree_center;
   for (int i=0; i<8; i++) {
     std::bitset<3> child_bitset(i);
     children[i] = new Octree(
-        (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-        (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-        (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-        (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-        (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-        (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID]
-        );
+        Vec3f(
+          child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+          child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+          child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+        ), 
+        radius/2.0f
+    );
   }
   max_depth = config->octree_depth;
-  same_voxel_size = config->octree_same_voxel_size;
 }
 
 void Octree::insert_vertex(Vertex v, bool debug) {
@@ -105,29 +57,29 @@ void Octree::insert_vertex(Vertex v, bool debug) {
   }
   // check if point is inside root bounding box
   if (
-      v.point.x < bounding_plane_d[X_MIN] || v.point.x > bounding_plane_d[X_MAX] ||
-      v.point.y < bounding_plane_d[Y_MIN] || v.point.y > bounding_plane_d[Y_MAX] ||
-      v.point.z < bounding_plane_d[Z_MIN] || v.point.z > bounding_plane_d[Z_MAX]
+      v.point.x < center.x-radius || v.point.x > center.x+radius ||
+      v.point.y < center.y-radius || v.point.y > center.y+radius ||
+      v.point.z < center.z-radius || v.point.z > center.z+radius
      ) {
     if (debug) std::cout << "Point insertion failed, point outside nodes bounding box\n";
     return;
   }
   // find out which child the point is part of
   int child;
-  if (v.point.x <= bounding_plane_d[X_MID]){
-    if (v.point.y <= bounding_plane_d[Y_MID]){
-      if (v.point.z <= bounding_plane_d[Z_MID]) child = 0;
+  if (v.point.x <= center.x) {
+    if (v.point.y <= center.y) {
+      if (v.point.z <= center.z) child = 0;
       else child = 4;
     } else {
-      if (v.point.z <= bounding_plane_d[Z_MID]) child = 2;
+      if (v.point.z <= center.z) child = 2;
       else child = 6;
     }
   } else {
-    if (v.point.y <= bounding_plane_d[Y_MID]){
-      if (v.point.z <= bounding_plane_d[Z_MID]) child = 1;
+    if (v.point.y <= center.y) {
+      if (v.point.z <= center.z) child = 1;
       else child = 5;
     } else {
-      if (v.point.z <= bounding_plane_d[Z_MID]) child = 3;
+      if (v.point.z <= center.z) child = 3;
       else child = 7;
     }
   }
@@ -149,35 +101,41 @@ void Octree::insert_vertex(Vertex v, bool debug) {
     if (debug) std::cout << "was Leaf Node, ";
     delete children[child];
     std::bitset<3> child_bitset(child);
-    if (same_voxel_size) {
+    if (!SVO) {
       if (max_depth > 1) {
         children[child] = new Octree(
-            (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-            (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-            (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-            (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-            (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-            (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID], max_depth-1, same_voxel_size);
+            Vec3f(
+              child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+              child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+              child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+            ), 
+            radius/2.0f,
+            max_depth-1
+        );
         if (debug) std::cout << "is Parent Node\n";
         children[child]->insert_vertex(v, debug);
       } else {
         children[child] = new Octree(
-            (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-            (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-            (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-            (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-            (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-            (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID], v);
+            Vec3f(
+              child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+              child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+              child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+            ), 
+            radius/2.0f,
+            v
+        );
         if (debug) std::cout << "is Point Node\n";
       }
     } else {
       children[child] = new Octree(
-          (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-          (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-          (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-          (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-          (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-          (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID], v);
+          Vec3f(
+            child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+            child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+            child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+          ), 
+          radius/2.0f,
+          v
+      );
       if (debug) std::cout << "is Point Node\n";
     }
     return;
@@ -186,7 +144,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
   //                        delete point node and make it a parent node, 
   //                        insert both points into parent node
   else {
-    if (same_voxel_size) {
+    if (!SVO) {
       if (debug) std::cout << "is already Point Node\n";
       return;
     }
@@ -196,12 +154,14 @@ void Octree::insert_vertex(Vertex v, bool debug) {
     children[child] = nullptr;
     std::bitset<3> child_bitset(child);
     children[child] = new Octree(
-        (child_bitset[0]) ? bounding_plane_d[X_MID] : bounding_plane_d[X_MIN],
-        (child_bitset[1]) ? bounding_plane_d[Y_MID] : bounding_plane_d[Y_MIN],
-        (child_bitset[2]) ? bounding_plane_d[Z_MID] : bounding_plane_d[Z_MIN],
-        (child_bitset[0]) ? bounding_plane_d[X_MAX] : bounding_plane_d[X_MID],
-        (child_bitset[1]) ? bounding_plane_d[Y_MAX] : bounding_plane_d[Y_MID],
-        (child_bitset[2]) ? bounding_plane_d[Z_MAX] : bounding_plane_d[Z_MID], max_depth-1, same_voxel_size);
+        Vec3f(
+          child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
+          child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
+          child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
+        ), 
+        radius/2.0f,
+        max_depth-1
+    );
     if (debug) std::cout << "is Parent Node\n  Inserting Point 1\n";
     children[child]->insert_vertex(v_present, debug);
     if (debug) std::cout << "  Inserting Point 2\n";
@@ -210,23 +170,20 @@ void Octree::insert_vertex(Vertex v, bool debug) {
 }
 
 void Octree::fill(std::string shape, int voxelcount, Material *material, bool debug) {
-  srand(time(0));
   if (shape == "cube") {
-    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
     for (int i=0; i<voxelcount; i++) {
       if (debug) std::cout << "Inserting Point\n";
       insert_vertex(
           Vertex(
             Vec3f(
-              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[X_MIN], 
-              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Y_MIN], 
-              float(rand())/float((RAND_MAX))*side_length+bounding_plane_d[Z_MIN]), 
+              float(rand())/float((RAND_MAX))*radius*2.0f+center.x-radius, 
+              float(rand())/float((RAND_MAX))*radius*2.0f+center.y-radius, 
+              float(rand())/float((RAND_MAX))*radius*2.0f+center.z-radius), 
             material
             ), 
           debug);
     }
   } else if (shape == "sphere") {
-    float half_side = bounding_plane_d[X_MAX] - bounding_plane_d[X_MID];
     for (int i=0; i<voxelcount; i++) {
       float angle1 = float(rand())/float((RAND_MAX)) * 2.*3.1415;
       float angle2 = float(rand())/float((RAND_MAX)) * 3.1415;
@@ -234,31 +191,29 @@ void Octree::fill(std::string shape, int voxelcount, Material *material, bool de
       insert_vertex(
           Vertex(
             Vec3f(
-              half_side*cos(angle1)*sin(angle2)+bounding_plane_d[X_MID], 
-              half_side*sin(angle1)*sin(angle2)+bounding_plane_d[Y_MID], 
-              half_side*cos(angle2)+bounding_plane_d[Z_MID]),
+              radius*cos(angle1)*sin(angle2)+center.x, 
+              radius*sin(angle1)*sin(angle2)+center.y, 
+              radius*cos(angle2)+center.z),
             material
             ), 
           debug);
     }
   } else if (shape == "cylinder") {
-    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
     for (int i=0; i<voxelcount; i++) {
       float angle = float(rand())/float((RAND_MAX)) * 2.*3.1415;
-      float height = float(rand())/float((RAND_MAX)) * side_length;
+      float height = float(rand())/float((RAND_MAX)) * radius*2.0f;
       if (debug) std::cout << "Inserting Point\n";
       insert_vertex(
           Vertex(
             Vec3f(
-              cos(angle)*(side_length/2.)+bounding_plane_d[X_MID], 
-              sin(angle)*(side_length/2.)+bounding_plane_d[Y_MID], 
+              cos(angle)*radius+center.x, 
+              sin(angle)*radius+center.y, 
               height),
               material
             ), 
           debug);
     }
   } else if (shape == "grid") {
-    float side_length = bounding_plane_d[X_MAX] - bounding_plane_d[X_MIN];
     for (int z=1; z<=voxelcount; z++) {
       for (int y=1; y<=voxelcount; y++) {
         for (int x=1; x<=voxelcount; x++) {
@@ -295,22 +250,22 @@ bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
   float t_max = ray->max_t; 
 
   float inverse_x = 1./ray->direction.x;
-  float t_x0 = (bounding_plane_d[X_MIN] - ray->origin.x) * inverse_x;
-  float t_x1 = (bounding_plane_d[X_MAX] - ray->origin.x) * inverse_x;
+  float t_x0 = (center.x-radius - ray->origin.x) * inverse_x;
+  float t_x1 = (center.x+radius - ray->origin.x) * inverse_x;
   if (ray->direction.x != 0.) {
     t_min = std::fmax(t_min, std::fmin(t_x0, t_x1));
     t_max = std::fmin(t_max, std::fmax(t_x0, t_x1));
   }
   float inverse_y = 1./ray->direction.y;
-  float t_y0 = (bounding_plane_d[Y_MIN] - ray->origin.y) * inverse_y;
-  float t_y1 = (bounding_plane_d[Y_MAX] - ray->origin.y) * inverse_y;
+  float t_y0 = (center.y-radius - ray->origin.y) * inverse_y;
+  float t_y1 = (center.y+radius - ray->origin.y) * inverse_y;
   if (ray->direction.y != 0.) {
     t_min = std::fmax(t_min, std::fmin(t_y0, t_y1));
     t_max = std::fmin(t_max, std::fmax(t_y0, t_y1));
   }
   float inverse_z = 1./ray->direction.z;
-  float t_z0 = (bounding_plane_d[Z_MIN] - ray->origin.z) * inverse_z;
-  float t_z1 = (bounding_plane_d[Z_MAX] - ray->origin.z) * inverse_z;
+  float t_z0 = (center.z-radius - ray->origin.z) * inverse_z;
+  float t_z1 = (center.z+radius - ray->origin.z) * inverse_z;
   if (ray->direction.z != 0.) {
     t_min = std::fmax(t_min, std::fmin(t_z0, t_z1));
     t_max = std::fmin(t_max, std::fmax(t_z0, t_z1));
@@ -368,12 +323,7 @@ bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_soli
             ii->point = ray->point(t_max_child);
           }
           ii->material = children[child_order[i]]->v.material;
-          Vec3f cube_center(
-              children[child_order[i]]->bounding_plane_d[X_MID], 
-              children[child_order[i]]->bounding_plane_d[Y_MID], 
-              children[child_order[i]]->bounding_plane_d[Z_MID]
-              );
-          Vec3f cti = (ii->point - cube_center).normalize(); // center to intersection (cti)
+          Vec3f cti = (ii->point - children[child_order[i]]->center).normalize(); // center to intersection (cti)
           if (std::abs(cti.x) >= std::abs(cti.y)) {
             if (std::abs(cti.x) >= std::abs(cti.z)) {
               ii->normal = Vec3f(round(cti.x),0.,0.); 

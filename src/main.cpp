@@ -33,10 +33,11 @@ int main() {
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material orange = new_material_standard(RGBi("orange"), 0.3, 0.8);
   Octree root(&config);
+  srand(0);
   root.fill("sphere", 3, &glass, false);
-  sleep(1);
+  srand(1);
   root.fill("sphere", 3, &mirror, false);
-  sleep(1);
+  srand(2);
   root.fill("sphere", 20, &orange, false);
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);

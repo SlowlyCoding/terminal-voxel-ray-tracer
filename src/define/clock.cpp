@@ -32,7 +32,7 @@ void Clock::finished_frame() {
     fps_combined /= 2;
     frame_counter /= 2;
   }
-  fps_combined += 1.0/frametime;
+  fps_combined += round(1.0/frametime);
   frame_counter++;
 }
 void Clock::display_performance() {

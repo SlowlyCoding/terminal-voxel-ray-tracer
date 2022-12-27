@@ -28,12 +28,12 @@
   },
 
   "renderer": {
-    "max_ray_bounces": 5,
+    "max_ray_bounces": 4,
     "grayscale": " .:-=+*#%@"
   },
 
   "skybox": {
     "enabled": true,
-    "file": "assets/studio.jpg"
+    "file": "assets/checkermap.jpg"
   }
 }
