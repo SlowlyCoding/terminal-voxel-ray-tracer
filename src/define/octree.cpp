@@ -227,6 +227,21 @@ void Octree::fill(std::string shape, int voxelcount, Material *material, bool de
         }
       }
     }
+  } else if (shape == "noise") {
+    const siv::PerlinNoise::seed_type seed = 123456u;
+    const siv::PerlinNoise perlin{ seed };
+    double noise;
+    float side_length = cbrt(pow(8, current_height));
+    for (int y=0; y<side_length; y++) {
+      for (int x=0; x<side_length; x++) {
+        noise = perlin.octave2D_01(x/side_length, y/side_length, 5);
+        while (noise > 0) {
+          insert_vertex(Vertex(Vec3f(x/side_length, y/side_length, noise), material), debug);
+          noise -= 1.0f/side_length;
+        }
+      }
+    }
+
   }
 }
 

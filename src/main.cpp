@@ -19,6 +19,14 @@
     or use double buffering so that render() doesn't have to wait until display() is finished
     maybe create scene class and store camera, objects, ... in there
 
+  TODO octree:
+  main goal: make octree node smaller
+    maybe store octree nodes and vertices somewhere outside in a vector, 
+    only store index of the vertex being stored in a node and a pointer to the vector
+
+    sizeof(Vertex) = 24;
+    sizeof(int) + sizeof(&std::vector) = 4 + 8;
+
 */
 
 int main() {
@@ -33,25 +41,9 @@ int main() {
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
   Octree root(&config);
-  std::cout << "\nfilling octree...";
-  root.fill("sphere", 50000, &color, false);
-  std::cout << "done!\n";
+  std::cout << "\nfilling octree..." << std::endl;
+  root.fill("noise", 50000, &color, false);
   std::cout << root.count_voxels() << " Voxels inserted\n";
-
-  std::cout << "\n\nsizeof(int): " << sizeof(int) << std::endl;;
-  std::cout << "sizeof(float): " << sizeof(float) << std::endl;;
-  Vertex v1(Vec3f(), &mirror);
-  Vertex *v1_p = &v1;
-  std::cout << "sizeof(Vertex): " << sizeof(v1) << std::endl;;
-  std::cout << "sizeof(&Vertex): " << sizeof(v1_p) << std::endl;;
-  std::vector<Vertex> vertices;
-  std::cout << "sizeof(&vertices): " << sizeof(&vertices) << std::endl;;
-  std::cout << "sizeof(root): " << sizeof(root) << std::endl;;
-  float arr[9] = {5,5,5,5,5,5,5,5,5};
-  std::cout << "sizeof(array[9]): " << sizeof(arr) << std::endl;;
-  Vec3f vec(90,25,2); 
-  std::cout << "sizeof(vector): " << sizeof(vec) << " + 4 (from float)" << std::endl;;
-
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
@@ -63,6 +55,7 @@ int main() {
 
   /* main loop */
   float cam_angle = 0; // rad
+  float cam_speed = 0.4;
   while (cam_angle < 4.25*PI) {
     clock.start();
     renderer.threaded_render();
@@ -73,11 +66,11 @@ int main() {
     // maybe change this here to something like scene.update()
     camera.view_point.x = sin(cam_angle)*1.5+0.5;
     camera.view_point.y = cos(cam_angle)*1.5+0.5;
-    camera.view_point.z = sin(cam_angle)+0.5;
-    camera.view_angle_x = cos(cam_angle+PI/2)*0.6;
-    camera.view_angle_z += 0.3*clock.frametime;
+    /* camera.view_point.z = sin(cam_angle)+0.5; */
+    /* camera.view_angle_x = cos(cam_angle+PI/2)*0.6; */
+    camera.view_angle_z += cam_speed*clock.frametime;
     camera.view_angle_changed();
-    cam_angle += 0.3*clock.frametime;
+    cam_angle += cam_speed*clock.frametime;
 
     clock.finished_frame();
     clock.display_performance();

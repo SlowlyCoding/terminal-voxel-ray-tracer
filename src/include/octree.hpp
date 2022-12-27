@@ -7,6 +7,7 @@
 #include "ray.hpp"
 #include "material.hpp"
 #include "vertex.hpp"
+#include "../include_external/reputeless/PerlinNoise.hpp"
 #include <vector>
 #include <bitset>
 /* if SVO is false points will always be stored inside the octree at the deepest level (height 0) */

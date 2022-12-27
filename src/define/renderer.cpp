@@ -13,13 +13,11 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
 
   skybox_enabled = config->skybox_enabled;
   if (skybox_enabled) {
-    std::cout << "loading in skybox...";
+    std::cout << "loading in skybox..." << std::endl;
     skybox = stbi_load(config->skybox_file.c_str(), &skybox_width, &skybox_height, &skybox_channels, 3);
     if (skybox == nullptr) {
       skybox_enabled = false;
-      std::cout << "failed!\n";
     }
-    std::cout << "done!\n";
   }
 }
 

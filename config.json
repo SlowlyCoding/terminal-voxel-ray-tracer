@@ -1,6 +1,6 @@
 {
   "terminal": {
-    "fullscreen": false,
+    "fullscreen": true,
     "width": 120,
     "height": 102,
     "display_mode": 2,
@@ -9,21 +9,22 @@
   },
 
   "camera": {
-    "view_point": [ 1.5, -0.5, 0.5 ],
-    "view_angle_x": 0.01,
+    "view_point": [ 1.5, -0.5, 1.3 ],
+    "view_angle_x": -0.5,
     "view_angle_z": 3.1415,
-    "fov": 55
+    "fov": 45
   }, 
 
   "octree": {
     "center": [ 0.5, 0.5, 0.5 ],
     "side_length": 1,
-    "depth": 5,
+    "depth": 6,
     "same_voxel_size": true
   },
 
   "lighting": {
     "pointlights": [[ 10, 10, 20, 2 ],
+                    [ -0.5, -0.5, 2, 2 ],
                     [ -10, -10, -20, 2 ]]
   },
 
