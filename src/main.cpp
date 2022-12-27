@@ -13,7 +13,7 @@
 
   TODO:
     look at fmt library, maybe its faster than cout
-    octree fill from config file
+    octree fill is kinda weird, do something there
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
@@ -31,19 +31,34 @@ int main() {
 
   Material glass = new_material_refractive(RGBi("purple"), 0.2, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
-  Material orange = new_material_standard(RGBi("green"), 0.3, 0.8);
+  Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
   Octree root(&config);
-  std::cout << "filling octree...";
-  root.fill("sphere", 50000, &orange, false);
+  std::cout << "\nfilling octree...";
+  root.fill("sphere", 50000, &color, false);
   std::cout << "done!\n";
   std::cout << root.count_voxels() << " Voxels inserted\n";
+
+  std::cout << "\n\nsizeof(int): " << sizeof(int) << std::endl;;
+  std::cout << "sizeof(float): " << sizeof(float) << std::endl;;
+  Vertex v1(Vec3f(), &mirror);
+  Vertex *v1_p = &v1;
+  std::cout << "sizeof(Vertex): " << sizeof(v1) << std::endl;;
+  std::cout << "sizeof(&Vertex): " << sizeof(v1_p) << std::endl;;
+  std::vector<Vertex> vertices;
+  std::cout << "sizeof(&vertices): " << sizeof(&vertices) << std::endl;;
+  std::cout << "sizeof(root): " << sizeof(root) << std::endl;;
+  float arr[9] = {5,5,5,5,5,5,5,5,5};
+  std::cout << "sizeof(array[9]): " << sizeof(arr) << std::endl;;
+  Vec3f vec(90,25,2); 
+  std::cout << "sizeof(vector): " << sizeof(vec) << " + 4 (from float)" << std::endl;;
+
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
   Clock clock(&config);
   Terminal terminal(&config);
   show_cursor(false);
 
-  std::cout << "Press Enter to start\n";
+  std::cout << "\nPress Enter to start\n";
   std::cin.ignore();
 
   /* main loop */

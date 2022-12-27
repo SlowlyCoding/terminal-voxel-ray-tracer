@@ -30,9 +30,9 @@ class Octree {
     Vec3f center;
     float radius;
 
-    Octree* children[8] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+    Octree* children[8];
 
-    /* leafes have the height 0 and the root node has the maximum depth of the octree as its height */
+    /* leafes have height 0 and the root node has the maximum depth of the octree as its height */
     int current_height;
 
     /* declaring leaf node */

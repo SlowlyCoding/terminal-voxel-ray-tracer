@@ -1,6 +1,6 @@
 #include "../include/renderer.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-#include "../include/nothings/stb_image.h"
+#include "../include_external/nothings/stb_image.h"
 
 Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, Octree *_octree) {
   pixelbuffer = _pixelbuffer;

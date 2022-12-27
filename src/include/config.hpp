@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <fstream>
-#include "nlohmann/json.hpp"
+#include "../include_external/nlohmann/json.hpp"
 
 #include "vector.hpp"
 

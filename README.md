@@ -68,6 +68,7 @@ An explanation of the config file:
     "depth": 4,
     // same_voxel_size true
     //    voxels will always be stored at the deepest level, 
+    // note: this doesn't actually work, change it inside octree.hpp
     "same_voxel_size": true
   },
 
