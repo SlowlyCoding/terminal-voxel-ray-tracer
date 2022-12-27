@@ -27,6 +27,13 @@ void Clock::finished_frame() {
   // calculate new frametime
   t_frame = std::chrono::high_resolution_clock::now();
   frametime = std::chrono::duration_cast<std::chrono::microseconds>(t_frame-t_start).count()/1000000.;
+
+  if (frame_counter == 500) {
+    fps_combined /= 2;
+    frame_counter /= 2;
+  }
+  fps_combined += 1.0/frametime;
+  frame_counter++;
 }
 void Clock::display_performance() {
   rendertime_str = std::to_string(rendertime*1000);
@@ -37,8 +44,9 @@ void Clock::display_performance() {
   frametime_str = frametime_str.substr(0, frametime_str.find(".")+precision+1);
   
   fps_str = std::string("\rFPS: ").append(std::to_string((int)round((1/frametime)))).append(std::string("  "));
+  avgfps_str = std::string("avgFPS: ").append(std::to_string((int)round((fps_combined/frame_counter)))).append(std::string("  "));
   rendertime_str = std::string("Render: ").append(rendertime_str).append(std::string("ms  "));
   displaytime_str = std::string("Display: ").append(displaytime_str).append(std::string("ms  "));
   frametime_str = std::string("Frame: ").append(frametime_str).append(std::string("ms  "));
-  std::cout << fps_str << rendertime_str << displaytime_str << frametime_str << std::endl;
+  std::cout << fps_str << avgfps_str << rendertime_str << displaytime_str << frametime_str << std::endl;
 }

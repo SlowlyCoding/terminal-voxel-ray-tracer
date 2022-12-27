@@ -14,7 +14,9 @@ private:
   double rendertime, displaytime; // seconds
   bool fps_limit_enabled;
   int fps_limit;
-  std::string fps_str, rendertime_str, displaytime_str, frametime_str;
+  long fps_combined = 0;
+  long frame_counter = 0;
+  std::string fps_str, avgfps_str, rendertime_str, displaytime_str, frametime_str;
 public:
   double frametime; // seconds
   Clock(Config *config);
