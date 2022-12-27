@@ -12,13 +12,13 @@
     "view_point": [ 1.5, -0.5, 0.5 ],
     "view_angle_x": 0.01,
     "view_angle_z": 3.1415,
-    "fov": 45
+    "fov": 55
   }, 
 
   "octree": {
     "center": [ 0.5, 0.5, 0.5 ],
     "side_length": 1,
-    "depth": 3,
+    "depth": 5,
     "same_voxel_size": true
   },
 
@@ -28,12 +28,12 @@
   },
 
   "renderer": {
-    "max_ray_bounces": 4,
+    "max_ray_bounces": 5,
     "grayscale": " .:-=+*#%@"
   },
 
   "skybox": {
     "enabled": true,
-    "file": "assets/checkermap.jpg"
+    "file": "assets/mountains.png"
   }
 }
