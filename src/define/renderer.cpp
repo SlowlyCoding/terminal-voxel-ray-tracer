@@ -24,7 +24,7 @@ Renderer::Renderer(Config *config, PixelBuffer *_pixelbuffer, Camera *_camera, O
 RGBi Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
   RGBi pixel("background");
   intersection_information ii;
-  if (octree->intersection(ray, &ii, false)) {
+  if (octree->intersection(ray, &ii)) {
     switch (ii.material->type) {
     case standard: {
       for (int i=0; i<lights.size(); i++) {

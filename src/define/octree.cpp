@@ -1,16 +1,5 @@
 #include "../include/octree.hpp"
 
-Octree::Octree(Vec3f _center, float _radius) {
-  type = Leaf;
-  center = _center;
-  radius = _radius;
-}
-Octree::Octree(Vec3f _center, float _radius, Vertex _v) {
-  type = Point;
-  v = _v;
-  center = _center;
-  radius = _radius;
-}
 Octree::Octree(Vec3f _center, float _radius, int _current_height) {
   type = Parent;
   center = _center;
@@ -33,7 +22,7 @@ Octree::Octree(Config *config) {
   radius = config->octree_side_length/2.;
   if (config->octree_center.x - radius < 0. ||
       config->octree_center.y - radius < 0. ||
-      config->octree_center.z - radius < 0.) { return; }
+      config->octree_center.z - radius < 0.) return;
   center = config->octree_center;
   for (int i=0; i<8; i++) {
     std::bitset<3> child_bitset(i);

@@ -14,6 +14,7 @@
   TODO:
     look at fmt library, maybe its faster than cout
     octree fill is kinda weird, do something there
+    fix octree fill for noise (its hardcoded rn)
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
@@ -42,7 +43,7 @@ int main() {
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
   Octree root(&config);
   std::cout << "\nfilling octree..." << std::endl;
-  root.fill("noise", 50000, &color, false);
+  root.fill("sphere", 50000, &color, false);
   std::cout << root.count_voxels() << " Voxels inserted\n";
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
@@ -55,7 +56,7 @@ int main() {
 
   /* main loop */
   float cam_angle = 0; // rad
-  float cam_speed = 0.4;
+  float cam_speed = 0.3;
   while (cam_angle < 4.25*PI) {
     clock.start();
     renderer.threaded_render();
@@ -66,8 +67,8 @@ int main() {
     // maybe change this here to something like scene.update()
     camera.view_point.x = sin(cam_angle)*1.5+0.5;
     camera.view_point.y = cos(cam_angle)*1.5+0.5;
-    /* camera.view_point.z = sin(cam_angle)+0.5; */
-    /* camera.view_angle_x = cos(cam_angle+PI/2)*0.6; */
+    camera.view_point.z = sin(cam_angle)+0.5;
+    camera.view_angle_x = cos(cam_angle+PI/2)*0.6;
     camera.view_angle_z += cam_speed*clock.frametime;
     camera.view_angle_changed();
     cam_angle += cam_speed*clock.frametime;

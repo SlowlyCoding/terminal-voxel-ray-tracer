@@ -23,7 +23,6 @@ Config::Config(std::string config_file_name) {
                         data["octree"]["center"][2]);
   octree_side_length = data["octree"]["side_length"];
   octree_depth = data["octree"]["depth"];
-  octree_same_voxel_size = data["octree"]["same_voxel_size"];
 
   std::vector<json> light_data = data["lighting"]["pointlights"];
   for (int i=0; i<light_data.size(); i++) {

@@ -37,9 +37,9 @@ class Octree {
     int current_height;
 
     /* declaring leaf node */
-    Octree(Vec3f _center, float _radius);
+    Octree(Vec3f center, float radius) : type(Leaf), center(center), radius(radius) {};
     /* declaring point node */
-    Octree(Vec3f _center, float _radius, Vertex _v);
+    Octree(Vec3f center, float radius, Vertex v) : type(Point), center(center), radius(radius), v(v) {};
     /* declaring parent/root node */
     Octree(Vec3f _center, float _radius, int _current_height);
 
@@ -56,5 +56,5 @@ class Octree {
     int count_voxels();
     /* returns closest point node the ray hit */ 
     /* only_solids is used for shadow rays which cant intersect transparent objects */
-    bool intersection(Ray *ray, intersection_information *ii, bool only_solids);
+    bool intersection(Ray *ray, intersection_information *ii, bool only_solids=false);
 };

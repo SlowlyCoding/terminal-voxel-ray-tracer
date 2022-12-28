@@ -24,7 +24,6 @@ public:
   Vec3f octree_center;
   float octree_side_length;
   int octree_depth;
-  bool octree_same_voxel_size;
 
   std::vector<Vec3f> lights;
   std::vector<float> light_intensities;
