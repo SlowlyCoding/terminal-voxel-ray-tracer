@@ -1,12 +1,12 @@
 #include "../include/octree.hpp"
 
-Octree::Octree(Vec3f _center, float _radius, int _current_height) {
+OctreeNode::OctreeNode(Vec3f _center, float _radius, unsigned int _current_height) {
   type = Parent;
   center = _center;
   radius = _radius;
   for (int i=0; i<8; i++) {
     std::bitset<3> child_bitset(i);
-    children[i] = new Octree(
+    children[i] = new OctreeNode(
         Vec3f(
           child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
           child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
@@ -15,32 +15,35 @@ Octree::Octree(Vec3f _center, float _radius, int _current_height) {
         radius/2.0f
     );
   }
-  current_height = _current_height;
+  /* current_height = _current_height; */
 }
 Octree::Octree(Config *config) {
-  type = Parent;
-  radius = config->octree_side_length/2.;
-  if (config->octree_center.x - radius < 0. ||
-      config->octree_center.y - radius < 0. ||
-      config->octree_center.z - radius < 0.) return;
-  center = config->octree_center;
-  for (int i=0; i<8; i++) {
-    std::bitset<3> child_bitset(i);
-    children[i] = new Octree(
-        Vec3f(
-          child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
-          child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
-          child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
-        ), 
-        radius/2.0f
-    );
-  }
-  current_height = config->octree_depth;
+  if (config->octree_center.x - config->octree_side_length/2.0f < 0.0f ||
+      config->octree_center.y - config->octree_side_length/2.0f < 0.0f ||
+      config->octree_center.z - config->octree_side_length/2.0f < 0.0f) return;
+  depth = config->octree_depth;
+  root = OctreeNode(
+      config->octree_center,
+      config->octree_side_length*0.5f,
+      99
+  );
+  /* for (int i=0; i<8; i++) { */
+  /*   std::bitset<3> child_bitset(i); */
+  /*   children[i] = new Octree( */
+  /*       Vec3f( */
+  /*         child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f, */
+  /*         child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f, */
+  /*         child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f */
+  /*       ), */ 
+  /*       radius/2.0f */
+  /*   ); */
+  /* } */
+  /* current_height = config->octree_depth; */
 }
 
-void Octree::insert_vertex(Vertex *v, bool debug) {
+void OctreeNode::insert_vertex(Vertex *v, unsigned int depth, bool debug) {
   // check if the tree is deep enough
-  if (current_height == 0) {
+  if (depth == 0) {
     if (debug) std::cout << "Max tree depth reached\n";
     return;
   }
@@ -72,12 +75,12 @@ void Octree::insert_vertex(Vertex *v, bool debug) {
       else child = 7;
     }
   }
-  if (debug) std::cout << "  " << current_height << " tree height, child " << child << " - ";
+  if (debug) std::cout << "  " << depth << " tree height, child " << child << " - ";
 
   // child is parent node -> go deeper into octree
   if (children[child]->type == Parent) {
     if (debug) std::cout << "is Parent Node\n";
-    children[child]->insert_vertex(v, debug);
+    children[child]->insert_vertex(v, depth-1, debug);
     return;
   }
   // if voxels can be of different sizes (SVO true)
@@ -91,20 +94,20 @@ void Octree::insert_vertex(Vertex *v, bool debug) {
     delete children[child];
     std::bitset<3> child_bitset(child);
     if (!SVO) {
-      if (current_height > 1) {
-        children[child] = new Octree(
+      if (depth > 1) {
+        children[child] = new OctreeNode(
             Vec3f(
               child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
               child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
               child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
             ), 
             radius/2.0f,
-            current_height-1
+            1-1
         );
         if (debug) std::cout << "is Parent Node\n";
-        children[child]->insert_vertex(v, debug);
+        children[child]->insert_vertex(v, depth-1, debug);
       } else {
-        children[child] = new Octree(
+        children[child] = new OctreeNode(
             Vec3f(
               child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
               child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
@@ -116,7 +119,7 @@ void Octree::insert_vertex(Vertex *v, bool debug) {
         if (debug) std::cout << "is Point Node\n";
       }
     } else {
-      children[child] = new Octree(
+      children[child] = new OctreeNode(
           Vec3f(
             child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
             child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
@@ -142,24 +145,24 @@ void Octree::insert_vertex(Vertex *v, bool debug) {
     delete children[child];
     children[child] = nullptr;
     std::bitset<3> child_bitset(child);
-    children[child] = new Octree(
+    children[child] = new OctreeNode(
         Vec3f(
           child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f,
           child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f,
           child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f
         ), 
         radius/2.0f,
-        current_height-1
+        1-1
     );
     if (debug) std::cout << "is Parent Node\n  Inserting Point 1\n";
-    children[child]->insert_vertex(v_present, debug);
+    children[child]->insert_vertex(v_present, depth-1, debug);
     if (debug) std::cout << "  Inserting Point 2\n";
-    children[child]->insert_vertex(v, debug);
+    children[child]->insert_vertex(v, depth-1, debug);
   }
 }
 
 
-int Octree::count_voxels() {
+int OctreeNode::count_voxels() {
   int voxel_count = 0;
   for (int child=0; child<8; child++) {
     if (children[child]->type == Parent) {
@@ -172,7 +175,7 @@ int Octree::count_voxels() {
   return voxel_count;
 }
 
-bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
+bool OctreeNode::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
   float t_min = ray->min_t; 
   float t_max = ray->max_t; 
 
@@ -203,7 +206,7 @@ bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
   return false;
 }
 
-bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_solids) {
+bool OctreeNode::intersection(Ray *ray, intersection_information *ii, bool only_solids) {
   // first check if ray hits octree root
   float t_min, t_max;
   if (ray_hit_node(ray, &t_min, &t_max)) {
@@ -270,4 +273,76 @@ bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_soli
     }
   }
   return false;
+}
+
+void Octree::fill(Shape shape, int point_count, Material *material, bool debug) {
+  /* first fill the vertices array with the point cloud using the given parameters */
+  switch (shape) {
+    case grid: {
+      int half_side_length_in_voxels = cbrt(pow(8,depth))*0.5f;
+      for (int z=1; z<=half_side_length_in_voxels; z++) {
+        for (int y=1; y<=half_side_length_in_voxels; y++) {
+          for (int x=1; x<=half_side_length_in_voxels; x++) {
+            vertices.push_back(
+                Vertex(
+                  Vec3f(x/(float)half_side_length_in_voxels,y/(float)half_side_length_in_voxels,z/(float)half_side_length_in_voxels),
+                  material
+                  ));
+          }
+        }
+      }
+      break;
+               }
+    case sphere: {
+      for (int i=0; i<point_count; i++) {
+        float angle1 = float(rand())/float((RAND_MAX)) * 2.*3.1415;
+        float angle2 = float(rand())/float((RAND_MAX)) * 3.1415;
+        vertices.push_back(
+            Vertex(
+              Vec3f(
+                root.radius*cos(angle1)*sin(angle2)+root.center.x, 
+                root.radius*sin(angle1)*sin(angle2)+root.center.y, 
+                root.radius*cos(angle2)+root.center.z),
+              material
+              ));
+      }
+      break;
+                 }
+    case cylinder: {
+      for (int i=0; i<point_count; i++) {
+        float angle = float(rand())/float((RAND_MAX)) * 2.*3.1415;
+        float height = float(rand())/float((RAND_MAX)) * root.radius*2.0f;
+        vertices.push_back(
+            Vertex(
+              Vec3f(
+                cos(angle)*root.radius+root.center.x, 
+                sin(angle)*root.radius+root.center.y, 
+                height),
+                material
+              ));
+      }
+      break;
+                   }
+      case noise: {
+        const siv::PerlinNoise::seed_type seed = 123456u;
+        const siv::PerlinNoise perlin{ seed };
+        double noise;
+        float side_length_in_voxels = cbrt(pow(8, depth));
+        for (int y=0; y<side_length_in_voxels; y++) {
+          for (int x=0; x<side_length_in_voxels; x++) {
+            noise = perlin.octave2D_01(x/side_length_in_voxels, y/side_length_in_voxels, 5);
+            while (noise > 0) {
+              vertices.push_back(Vertex(Vec3f(x/side_length_in_voxels, y/side_length_in_voxels, noise), material));
+              noise -= 1.0f/side_length_in_voxels;
+            }
+          }
+        }
+        break;
+                  }
+  }
+  /* then fill the octree with the vertices */
+  for (int i=0; i<vertices.size(); i++) {
+    if (debug) std::cout << "Inserting Vertex:\n";
+    root.insert_vertex(&vertices[i], depth, debug);
+  }
 }

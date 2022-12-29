@@ -20,17 +20,16 @@ enum NodeType {
   Leaf
 };
 
-class Octree {
-  private:
-    /* declaring leaf node */
-    Octree(Vec3f center, float radius) : type(Leaf), center(center), radius(radius) {};
-    /* declaring point node */
-    Octree(Vec3f center, float radius, Vertex *v) : type(Point), center(center), radius(radius), v(v) {};
-    /* declaring parent/root node */
-    Octree(Vec3f _center, float _radius, int _current_height);
+class OctreeNode {
   public:
-    /* define octree root node from outside (by user) */
-    Octree(Config *config);
+    /* init empty */
+    OctreeNode() : type(Leaf), center(Vec3f()), radius(0) {};
+    /* init leaf node */
+    OctreeNode(Vec3f center, float radius) : type(Leaf), center(center), radius(radius) {};
+    /* init point node */
+    OctreeNode(Vec3f center, float radius, Vertex *v) : type(Point), center(center), radius(radius), v(v) {};
+    /* init parent/root node */
+    OctreeNode(Vec3f _center, float _radius, unsigned int _current_height);
 
     NodeType type;
 
@@ -41,12 +40,9 @@ class Octree {
     Vec3f center;
     float radius;
 
-    Octree* children[8];
+    OctreeNode* children[8];
 
-    /* leafes have height 0 and the root node has the maximum depth of the octree as its height */
-    unsigned char current_height;
-
-    void insert_vertex(Vertex *v, bool debug);
+    void insert_vertex(Vertex *v, unsigned int depth, bool debug);
     int count_voxels();
     /* checks if a ray intersects the node this function is being called on and assigns */
     /* the t scalar for when the ray enters and exits the node */
@@ -54,4 +50,21 @@ class Octree {
     /* returns closest point node the ray hit */ 
     /* only_solids is used for shadow rays which cant intersect transparent objects */
     bool intersection(Ray *ray, intersection_information *ii, bool only_solids=false);
+};
+
+enum Shape {
+  grid,
+  sphere,
+  cylinder,
+  noise
+};
+
+class Octree {
+  public: 
+    OctreeNode root;
+    unsigned int depth;
+    std::vector<Vertex> vertices;
+
+    Octree(Config *config);
+    void fill(Shape shape, int point_count, Material *material, bool debug);
 };

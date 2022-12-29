@@ -5,7 +5,7 @@
 #include "include/pixelbuffer.hpp"
 #include "include/camera.hpp"
 #include "include/renderer.hpp"
-#include "include/point_cloud.hpp"
+/* #include "include/point_cloud.hpp" */
 #include "include/octree.hpp"
 #include "include/vector.hpp"
 #define PI 3.14159265
@@ -36,26 +36,19 @@ int main() {
 
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
-  Octree root(&config);
+  Octree octree(&config);
 
   /* create materials */
   Material glass = new_material_refractive(RGBi("purple"), 0.2, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.1);
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
 
-  /* create point cloud */
-  std::cout << "\ncreating point cloud..." << std::endl;
-  std::vector<Vertex> vertices;
-  create_point_cloud(&vertices, Shape::grid, 50000, &color, &root);
+  /* fill octree with a point cloud */
+  std::cout << "filling octree...\n";
+  octree.fill(Shape::sphere, 50000, &color, false);
+  std::cout << octree.root.count_voxels() << " Voxels inserted\n";
 
-  /* fill octree with said point cloud */
-  std::cout << "filling octree..." << std::endl;
-  for (int i=0; i<vertices.size(); i++) {
-    root.insert_vertex(&vertices[i], false);
-  }
-  std::cout << root.count_voxels() << " Voxels inserted\n";
-
-  Renderer renderer(&config, &pixelbuffer, &camera, &root);
+  Renderer renderer(&config, &pixelbuffer, &camera, &octree);
   Clock clock(&config);
   Terminal terminal(&config);
   show_cursor(false);
