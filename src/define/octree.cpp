@@ -248,28 +248,24 @@ int Octree::count_voxels() {
 }
 
 bool Octree::ray_hit_node(Ray *ray, float *_t_min, float *_t_max) {
-  // slab method
   float t_min = ray->min_t; 
   float t_max = ray->max_t; 
 
-  float inverse_x = 1./ray->direction.x;
-  float t_x0 = (center.x-radius - ray->origin.x) * inverse_x;
-  float t_x1 = (center.x+radius - ray->origin.x) * inverse_x;
   if (ray->direction.x != 0.) {
+    float t_x0 = (center.x-radius - ray->origin.x) / ray->direction.x;
+    float t_x1 = (center.x+radius - ray->origin.x) / ray->direction.x;
     t_min = std::fmax(t_min, std::fmin(t_x0, t_x1));
     t_max = std::fmin(t_max, std::fmax(t_x0, t_x1));
   }
-  float inverse_y = 1./ray->direction.y;
-  float t_y0 = (center.y-radius - ray->origin.y) * inverse_y;
-  float t_y1 = (center.y+radius - ray->origin.y) * inverse_y;
   if (ray->direction.y != 0.) {
+    float t_y0 = (center.y-radius - ray->origin.y) / ray->direction.y;
+    float t_y1 = (center.y+radius - ray->origin.y) / ray->direction.y;
     t_min = std::fmax(t_min, std::fmin(t_y0, t_y1));
     t_max = std::fmin(t_max, std::fmax(t_y0, t_y1));
   }
-  float inverse_z = 1./ray->direction.z;
-  float t_z0 = (center.z-radius - ray->origin.z) * inverse_z;
-  float t_z1 = (center.z+radius - ray->origin.z) * inverse_z;
   if (ray->direction.z != 0.) {
+    float t_z0 = (center.z-radius - ray->origin.z) / ray->direction.z;
+    float t_z1 = (center.z+radius - ray->origin.z) / ray->direction.z;
     t_min = std::fmax(t_min, std::fmin(t_z0, t_z1));
     t_max = std::fmin(t_max, std::fmax(t_z0, t_z1));
   }

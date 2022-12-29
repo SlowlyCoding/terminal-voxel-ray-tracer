@@ -33,6 +33,6 @@
 
   "skybox": {
     "enabled": false,
-    "file": "assets/skybox/mountains.png"
+    "file": "assets/checkermap.jpg"
   }
 }
