@@ -40,13 +40,13 @@ int main() {
 
   /* create materials */
   Material glass = new_material_refractive(RGBi("purple"), 0.2, 1.5);
-  Material mirror = new_material_reflective(RGBi("white"), 0.2);
+  Material mirror = new_material_reflective(RGBi("white"), 0.1);
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
 
   /* create point cloud */
   std::cout << "\ncreating point cloud..." << std::endl;
   std::vector<Vertex> vertices;
-  create_point_cloud(&vertices, Shape::sphere, 50000, &color, &root);
+  create_point_cloud(&vertices, Shape::grid, 50000, &color, &root);
 
   /* fill octree with said point cloud */
   std::cout << "filling octree..." << std::endl;

@@ -9,13 +9,13 @@ void create_point_cloud(
 ) {
   switch (shape) {
     case grid: {
-      int side_length_in_voxels = cbrt(pow(8,root->current_height));
-      for (int z=1; z<=side_length_in_voxels; z++) {
-        for (int y=1; y<=side_length_in_voxels; y++) {
-          for (int x=1; x<=side_length_in_voxels; x++) {
+      int half_side_length_in_voxels = cbrt(pow(8,root->current_height))*0.5f;
+      for (int z=1; z<=half_side_length_in_voxels; z++) {
+        for (int y=1; y<=half_side_length_in_voxels; y++) {
+          for (int x=1; x<=half_side_length_in_voxels; x++) {
             vertices->push_back(
                 Vertex(
-                  Vec3f(x/(float)side_length_in_voxels,y/(float)side_length_in_voxels,z/(float)side_length_in_voxels),
+                  Vec3f(x/(float)half_side_length_in_voxels,y/(float)half_side_length_in_voxels,z/(float)half_side_length_in_voxels),
                   material
                   ));
           }

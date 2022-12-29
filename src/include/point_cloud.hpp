@@ -11,6 +11,8 @@ enum Shape {
   noise
 };
 
+/* creates a point cloud which can be inserted into an octree */
+/* point_count is not needed for the shapes grid and noise */
 void create_point_cloud(
     std::vector<Vertex> *vertices, 
     Shape shape, 
