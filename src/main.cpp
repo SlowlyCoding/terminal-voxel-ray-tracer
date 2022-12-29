@@ -5,6 +5,7 @@
 #include "include/pixelbuffer.hpp"
 #include "include/camera.hpp"
 #include "include/renderer.hpp"
+#include "include/point_cloud.hpp"
 #include "include/octree.hpp"
 #include "include/vector.hpp"
 #define PI 3.14159265
@@ -13,8 +14,7 @@
 
   TODO:
     look at fmt library, maybe its faster than cout
-    octree fill is kinda weird, do something there
-    fix octree fill for noise (its hardcoded rn)
+    fix create_point_cloud for noise (its hardcoded rn)
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
@@ -34,16 +34,27 @@ int main() {
   /* parse config file */
   Config config("config.json");
 
-  /* init everything and create octree */
   PixelBuffer pixelbuffer(&config);
   Camera camera(&config);
+  Octree root(&config);
 
+  /* create materials */
   Material glass = new_material_refractive(RGBi("purple"), 0.2, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.2);
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
-  Octree root(&config);
-  std::cout << "\nfilling octree..." << std::endl;
-  root.fill("sphere", 50000, &color, false);
+
+  /* create point cloud */
+  std::cout << "\ncreating point cloud..." << std::endl;
+  std::vector<Vertex> vertices;
+  create_point_cloud(&vertices, Shape::sphere, 50000, &color, &root);
+
+  /* fill octree with said point cloud */
+  std::cout << "filling octree..." << std::endl;
+  bool debug = false;
+  for (int i=0; i<vertices.size(); i++) {
+    if (debug) std::cout << "Inserting Point\n";
+    root.insert_vertex(&vertices[i], debug);
+  }
   std::cout << root.count_voxels() << " Voxels inserted\n";
 
   Renderer renderer(&config, &pixelbuffer, &camera, &root);
@@ -51,6 +62,7 @@ int main() {
   Terminal terminal(&config);
   show_cursor(false);
 
+  /* setup done */
   std::cout << "\nPress Enter to start\n";
   std::cin.ignore();
 

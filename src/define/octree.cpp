@@ -38,7 +38,7 @@ Octree::Octree(Config *config) {
   current_height = config->octree_depth;
 }
 
-void Octree::insert_vertex(Vertex v, bool debug) {
+void Octree::insert_vertex(Vertex *v, bool debug) {
   // check if the tree is deep enough
   if (current_height == 0) {
     if (debug) std::cout << "Max tree depth reached\n";
@@ -46,29 +46,29 @@ void Octree::insert_vertex(Vertex v, bool debug) {
   }
   // check if point is inside root bounding box
   if (
-      v.point.x < center.x-radius || v.point.x > center.x+radius ||
-      v.point.y < center.y-radius || v.point.y > center.y+radius ||
-      v.point.z < center.z-radius || v.point.z > center.z+radius
+      v->point.x < center.x-radius || v->point.x > center.x+radius ||
+      v->point.y < center.y-radius || v->point.y > center.y+radius ||
+      v->point.z < center.z-radius || v->point.z > center.z+radius
      ) {
     if (debug) std::cout << "Point insertion failed, point outside nodes bounding box\n";
     return;
   }
   // find out which child the point is part of
   int child;
-  if (v.point.x <= center.x) {
-    if (v.point.y <= center.y) {
-      if (v.point.z <= center.z) child = 0;
+  if (v->point.x <= center.x) {
+    if (v->point.y <= center.y) {
+      if (v->point.z <= center.z) child = 0;
       else child = 4;
     } else {
-      if (v.point.z <= center.z) child = 2;
+      if (v->point.z <= center.z) child = 2;
       else child = 6;
     }
   } else {
-    if (v.point.y <= center.y) {
-      if (v.point.z <= center.z) child = 1;
+    if (v->point.y <= center.y) {
+      if (v->point.z <= center.z) child = 1;
       else child = 5;
     } else {
-      if (v.point.z <= center.z) child = 3;
+      if (v->point.z <= center.z) child = 3;
       else child = 7;
     }
   }
@@ -138,7 +138,7 @@ void Octree::insert_vertex(Vertex v, bool debug) {
       return;
     }
     if (debug) std::cout << "was Point Node, ";
-    Vertex v_present = children[child]->v;
+    Vertex *v_present = children[child]->v;
     delete children[child];
     children[child] = nullptr;
     std::bitset<3> child_bitset(child);
@@ -158,81 +158,6 @@ void Octree::insert_vertex(Vertex v, bool debug) {
   }
 }
 
-void Octree::fill(std::string shape, int voxelcount, Material *material, bool debug) {
-  if (shape == "cube") {
-    for (int i=0; i<voxelcount; i++) {
-      if (debug) std::cout << "Inserting Point\n";
-      insert_vertex(
-          Vertex(
-            Vec3f(
-              float(rand())/float((RAND_MAX))*radius*2.0f+center.x-radius, 
-              float(rand())/float((RAND_MAX))*radius*2.0f+center.y-radius, 
-              float(rand())/float((RAND_MAX))*radius*2.0f+center.z-radius), 
-            material
-            ), 
-          debug);
-    }
-  } else if (shape == "sphere") {
-    for (int i=0; i<voxelcount; i++) {
-      float angle1 = float(rand())/float((RAND_MAX)) * 2.*3.1415;
-      float angle2 = float(rand())/float((RAND_MAX)) * 3.1415;
-      if (debug) std::cout << "Inserting Point\n";
-      insert_vertex(
-          Vertex(
-            Vec3f(
-              radius*cos(angle1)*sin(angle2)+center.x, 
-              radius*sin(angle1)*sin(angle2)+center.y, 
-              radius*cos(angle2)+center.z),
-            material
-            ), 
-          debug);
-    }
-  } else if (shape == "cylinder") {
-    for (int i=0; i<voxelcount; i++) {
-      float angle = float(rand())/float((RAND_MAX)) * 2.*3.1415;
-      float height = float(rand())/float((RAND_MAX)) * radius*2.0f;
-      if (debug) std::cout << "Inserting Point\n";
-      insert_vertex(
-          Vertex(
-            Vec3f(
-              cos(angle)*radius+center.x, 
-              sin(angle)*radius+center.y, 
-              height),
-              material
-            ), 
-          debug);
-    }
-  } else if (shape == "grid") {
-    for (int z=1; z<=voxelcount; z++) {
-      for (int y=1; y<=voxelcount; y++) {
-        for (int x=1; x<=voxelcount; x++) {
-          if (debug) std::cout << "Inserting Point\n";
-          insert_vertex(
-              Vertex(
-                Vec3f(x/(float)voxelcount,y/(float)voxelcount,z/(float)voxelcount),
-                  material
-                ), 
-              debug);
-        }
-      }
-    }
-  } else if (shape == "noise") {
-    const siv::PerlinNoise::seed_type seed = 123456u;
-    const siv::PerlinNoise perlin{ seed };
-    double noise;
-    float side_length = cbrt(pow(8, current_height));
-    for (int y=0; y<side_length; y++) {
-      for (int x=0; x<side_length; x++) {
-        noise = perlin.octave2D_01(x/side_length, y/side_length, 5);
-        while (noise > 0) {
-          insert_vertex(Vertex(Vec3f(x/side_length, y/side_length, noise), material), debug);
-          noise -= 1.0f/side_length;
-        }
-      }
-    }
-
-  }
-}
 
 int Octree::count_voxels() {
   int voxel_count = 0;
@@ -307,7 +232,7 @@ bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_soli
         }
         // child is point node -> return intersection information
         else if (children[child_order[i]]->type != Leaf) {
-          if (only_solids && children[child_order[i]]->v.material->type == refractive) {
+          if (only_solids && children[child_order[i]]->v->material->type == refractive) {
             continue;
           }
           // check if view_point is inside the voxel
@@ -320,7 +245,7 @@ bool Octree::intersection(Ray *ray, intersection_information *ii, bool only_soli
             ii->t = t_max_child;
             ii->point = ray->point(t_max_child);
           }
-          ii->material = children[child_order[i]]->v.material;
+          ii->material = children[child_order[i]]->v->material;
           Vec3f cti = (ii->point - children[child_order[i]]->center).normalize(); // center to intersection (cti)
           if (std::abs(cti.x) >= std::abs(cti.y)) {
             if (std::abs(cti.x) >= std::abs(cti.z)) {
