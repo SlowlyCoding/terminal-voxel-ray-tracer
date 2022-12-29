@@ -50,10 +50,8 @@ int main() {
 
   /* fill octree with said point cloud */
   std::cout << "filling octree..." << std::endl;
-  bool debug = false;
   for (int i=0; i<vertices.size(); i++) {
-    if (debug) std::cout << "Inserting Point\n";
-    root.insert_vertex(&vertices[i], debug);
+    root.insert_vertex(&vertices[i], false);
   }
   std::cout << root.count_voxels() << " Voxels inserted\n";
 
