@@ -30,6 +30,7 @@ class OctreeNode {
     OctreeNode(Vec3f center, float radius, Vertex *v) : type(Point), center(center), radius(radius), v(v) {};
     /* init parent/root node */
     OctreeNode(Vec3f _center, float _radius, unsigned int _current_height);
+    // height is just here so that its a different init function then the one for a leaf node -> fix that
 
     NodeType type;
 

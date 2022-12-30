@@ -29,7 +29,7 @@ int main() {
   Octree octree(&config);
 
   /* create materials */
-  Material glass = new_material_refractive(RGBi("purple"), 0.2, 1.5);
+  Material glass = new_material_refractive(RGBi("purple"), 0.1, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.1);
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
 

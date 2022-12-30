@@ -15,7 +15,6 @@ OctreeNode::OctreeNode(Vec3f _center, float _radius, unsigned int _current_heigh
         radius/2.0f
     );
   }
-  /* current_height = _current_height; */
 }
 Octree::Octree(Config *config) {
   if (config->octree_center.x - config->octree_side_length/2.0f < 0.0f ||
@@ -27,18 +26,6 @@ Octree::Octree(Config *config) {
       config->octree_side_length*0.5f,
       99
   );
-  /* for (int i=0; i<8; i++) { */
-  /*   std::bitset<3> child_bitset(i); */
-  /*   children[i] = new Octree( */
-  /*       Vec3f( */
-  /*         child_bitset[0] ? center.x+radius/2.0f : center.x-radius/2.0f, */
-  /*         child_bitset[1] ? center.y+radius/2.0f : center.y-radius/2.0f, */
-  /*         child_bitset[2] ? center.z+radius/2.0f : center.z-radius/2.0f */
-  /*       ), */ 
-  /*       radius/2.0f */
-  /*   ); */
-  /* } */
-  /* current_height = config->octree_depth; */
 }
 
 void OctreeNode::insert_vertex(Vertex *v, unsigned int depth, bool debug) {

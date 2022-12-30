@@ -13,7 +13,7 @@ This ray tracer only works on unix system, but I'm sure that with some small twe
 
 ## Table of Contents
 
-1. [Requirments](#requirments)
+1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
 
@@ -21,7 +21,7 @@ This ray tracer only works on unix system, but I'm sure that with some small twe
 
 The only requirement is [SFML](https://www.sfml-dev.org/download.php).
 
-SFML is only used to get keyboard and mouse input.
+SFML is only used to get keyboard and mouse input, there is no SFML window.
 
 ## Installation
 
