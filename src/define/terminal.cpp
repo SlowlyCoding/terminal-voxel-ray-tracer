@@ -138,11 +138,11 @@ bool Terminal::handle_events(Camera *camera, float frametime) {
     camera->view_point = camera->view_point - camera->view_up*camera_speed*frametime;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp)) { // zoom (decrease FOV)
-    camera->FOV -= camera_speed*10.0f*frametime;
+    camera->FOV -= camera_speed*15.0f*frametime;
     camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown)) { // zoom (increase FOV)
-    camera->FOV += camera_speed*10.0f*frametime;
+    camera->FOV += camera_speed*15.0f*frametime;
     camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // change display mode

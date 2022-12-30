@@ -4,8 +4,6 @@ I started this project to learn more about voxels, a bit of research led me to s
 
 I had already had some experience with console graphics, so I made this ray tracer output to the terminal as well.
 
-Down the line I want to move the calculations to the GPU using CUDA or OpenCL, this would allow me to experiment with bigger octrees and more demanding scenes.
-
 This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
 
 <p align="center">
@@ -15,8 +13,15 @@ This ray tracer only works on unix system, but I'm sure that with some small twe
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Configuration](#configuration)
+1. [Requirments](#requirments)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+
+## Requirements
+
+The only requirement is [SFML](https://www.sfml-dev.org/download.php).
+
+SFML is only used to get keyboard and mouse input.
 
 ## Installation
 
@@ -54,7 +59,9 @@ An explanation of the config file:
     "view_point": [ 1.5, -0.5, 0.5 ],
     "view_angle_x": 0.01, // pitch (in rad)
     "view_angle_z": 3.1415, // yaw (in rad)
-    "fov": 55 // field of view
+    "fov": 55, // field of view
+    "speed": 0.5, // speed of camera movement (WASD and QE)
+    "mouse_sensitivity": 0.1
   }, 
 
   "octree": {
@@ -65,11 +72,7 @@ An explanation of the config file:
     // depth defines how deep the octree is
     // 8^depth = maximum number of voxels (capacity)
     // cuberoot(8^depth) = octree side length in voxels
-    "depth": 4,
-    // same_voxel_size true
-    //    voxels will always be stored at the deepest level, 
-    // note: this doesn't actually work, change it inside octree.hpp
-    "same_voxel_size": true
+    "depth": 4
   },
 
   "lighting": {
@@ -79,7 +82,7 @@ An explanation of the config file:
   },
 
   "renderer": {
-    "max_ray_bounces": 10,
+    "max_ray_bounces": 5,
     // ASCII grayscale used for display_mode 0 and 1
     "grayscale": " .:-=+*#%@"
   }
