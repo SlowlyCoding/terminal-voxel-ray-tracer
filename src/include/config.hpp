@@ -20,6 +20,8 @@ public:
   float camera_view_angle_x;
   float camera_view_angle_z;
   int camera_fov;
+  float camera_speed;
+  float camera_mouse_sensitivity;
 
   Vec3f octree_center;
   float octree_side_length;

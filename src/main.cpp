@@ -5,7 +5,6 @@
 #include "include/pixelbuffer.hpp"
 #include "include/camera.hpp"
 #include "include/renderer.hpp"
-/* #include "include/point_cloud.hpp" */
 #include "include/octree.hpp"
 #include "include/vector.hpp"
 #define PI 3.14159265
@@ -14,19 +13,10 @@
 
   TODO:
     look at fmt library, maybe its faster than cout
-    fix create_point_cloud for noise (its hardcoded rn)
+    fix octree.fill for noise (its hardcoded rn)
     improve display_mode 2
     create 2 buffers and only display the pixels which have changed (less set_color calls)
     or use double buffering so that render() doesn't have to wait until display() is finished
-    maybe create scene class and store camera, objects, ... in there
-
-  TODO octree:
-  main goal: make octree node smaller
-    maybe store octree nodes and vertices somewhere outside in a vector, 
-    only store index of the vertex being stored in a node and a pointer to the vector
-
-    sizeof(Vertex) = 24;
-    sizeof(int) + sizeof(&std::vector) = 4 + 8;
 
 */
 
@@ -44,8 +34,10 @@ int main() {
   Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
 
   /* fill octree with a point cloud */
-  std::cout << "filling octree...\n";
+  std::cout << "\nfilling octree...\n";
   octree.fill(Shape::sphere, 50000, &color, false);
+  /* octree.fill(Shape::noise, 0, &color, false); */
+  /* octree.fill(Shape::sphere, 50000, &mirror, false); */
   std::cout << octree.root.count_voxels() << " Voxels inserted\n";
 
   Renderer renderer(&config, &pixelbuffer, &camera, &octree);
@@ -54,28 +46,23 @@ int main() {
   show_cursor(false);
 
   /* setup done */
+  std::cout << "\nuse [WASD] to move,\n";
+  std::cout << "[Q/E] to move up and down,\n";
+  std::cout << "[PageUp/PageDown] to zoom,\n";
+  std::cout << "[Space] to change the display mode\n";
+  std::cout << "and [Esc] to quit\n";
   std::cout << "\nPress Enter to start\n";
   std::cin.ignore();
 
   /* main loop */
-  float cam_angle = 0; // rad
-  float cam_speed = 0.3;
-  while (cam_angle < 4.25*PI) {
+  bool quit = false;
+  while (!quit) {
     clock.start();
     renderer.threaded_render();
     clock.finished_render();
     terminal.display(&pixelbuffer);
     clock.finished_display();
-
-    // maybe change this here to something like scene.update()
-    camera.view_point.x = sin(cam_angle)*1.5+0.5;
-    camera.view_point.y = cos(cam_angle)*1.5+0.5;
-    camera.view_point.z = sin(cam_angle)+0.5;
-    camera.view_angle_x = cos(cam_angle+PI/2)*0.6;
-    camera.view_angle_z += cam_speed*clock.frametime;
-    camera.view_angle_changed();
-    cam_angle += cam_speed*clock.frametime;
-
+    quit = terminal.handle_events(&camera, clock.frametime);
     clock.finished_frame();
     clock.display_performance();
   }

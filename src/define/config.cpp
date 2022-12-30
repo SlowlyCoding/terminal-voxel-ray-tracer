@@ -17,6 +17,8 @@ Config::Config(std::string config_file_name) {
   camera_view_angle_x = data["camera"]["view_angle_x"];
   camera_view_angle_z = data["camera"]["view_angle_z"];
   camera_fov = data["camera"]["fov"];
+  camera_speed = data["camera"]["speed"];
+  camera_mouse_sensitivity = data["camera"]["mouse_sensitivity"];
 
   octree_center = Vec3f(data["octree"]["center"][0], 
                         data["octree"]["center"][1], 

@@ -1,5 +1,5 @@
 default:
-	g++ src/main.cpp -o output.out src/define/*.cpp -pthread
+	g++ src/main.cpp -o output.out src/define/*.cpp -pthread -lsfml-window
 	./output.out
 
 debug:

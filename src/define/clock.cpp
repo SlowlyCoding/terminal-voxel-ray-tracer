@@ -28,7 +28,7 @@ void Clock::finished_frame() {
   t_frame = std::chrono::high_resolution_clock::now();
   frametime = std::chrono::duration_cast<std::chrono::microseconds>(t_frame-t_start).count()/1000000.;
 
-  if (frame_counter == 500) {
+  if (frame_counter == 120) {
     fps_combined /= 2;
     frame_counter /= 2;
   }

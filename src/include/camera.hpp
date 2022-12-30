@@ -7,6 +7,7 @@ class Camera {
     // orientation vector
     Vec3f view_direction;
     Vec3f view_up;
+    Vec3f view_left;
     //camera position
     Vec3f view_point; 
     // orientation angles

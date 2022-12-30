@@ -20,4 +20,5 @@ void Camera::view_angle_changed() {
   view_up.x = sin(view_angle_z)*cos(view_angle_x+1.571), 
   view_up.y = cos(view_angle_z)*cos(view_angle_x+1.571),
   view_up.z = sin(view_angle_x+1.571);
+  view_left = cross(view_up, view_direction);
 }

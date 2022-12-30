@@ -3,6 +3,9 @@
 Terminal::Terminal(Config *config) {
   display_mode = config->terminal_display_mode;
   grayscale = config->renderer_grayscale;
+  camera_speed = config->camera_speed;
+  mouse_sensitivity = config->camera_mouse_sensitivity;
+  last_mouse_position = sf::Mouse::getPosition();
 }
 
 void show_cursor(bool show) {
@@ -113,4 +116,60 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
       std::cout << "display_modes:\n0 - grayscale ascii\n1 - colored ascii\n2 - colored ANSI\n";
   };
   reset_coloring();
+}
+
+bool Terminal::handle_events(Camera *camera, float frametime) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { // forward
+    camera->view_point = camera->view_point + camera->view_direction*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { // backward
+    camera->view_point = camera->view_point - camera->view_direction*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { // left
+    camera->view_point = camera->view_point + camera->view_left*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { // right
+    camera->view_point = camera->view_point - camera->view_left*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) { // up
+    camera->view_point = camera->view_point + camera->view_up*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) { // down
+    camera->view_point = camera->view_point - camera->view_up*camera_speed*frametime;
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp)) { // zoom (decrease FOV)
+    camera->FOV -= camera_speed*10.0f*frametime;
+    camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown)) { // zoom (increase FOV)
+    camera->FOV += camera_speed*10.0f*frametime;
+    camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // change display mode
+    if (display_mode == 2) {
+      display_mode = 0;
+    } else {
+      display_mode++;
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) { // quit
+    return true;
+  }
+
+  /* mouse */
+  // center mouse if its closet to the screen borders
+  if (mouse_position.x < 10 || mouse_position.x > 1910 || mouse_position.y < 10 || mouse_position.y > 1070) {
+    sf::Mouse::setPosition(sf::Vector2i(960, 540));
+    last_mouse_position = sf::Mouse::getPosition();
+  } else {
+    last_mouse_position = mouse_position;
+  }
+  mouse_position = sf::Mouse::getPosition();
+  sf::Vector2i movement = mouse_position-last_mouse_position;
+  camera->view_angle_z += (float)(movement.x)*mouse_sensitivity*frametime;
+  camera->view_angle_x -= (float)(movement.y)*mouse_sensitivity*frametime;
+  camera->view_angle_x = std::min(1.55f, std::max(-1.55f, camera->view_angle_x));
+  camera->view_angle_changed();
+
+  return false;
 }
