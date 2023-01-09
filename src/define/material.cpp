@@ -45,6 +45,13 @@ void RGBi::normalize() {
   if (b<0) {b=0;} else if (b>255) {b=255;}
 }
 
+bool RGBi::operator==(RGBi other) {
+  return 
+    r == other.r &&
+    g == other.g &&
+    b == other.b;
+}
+
 Material new_material_standard(RGBi color, float diffuse, float specular) {
   return Material(standard, color, diffuse, specular, 0.0, 0.0);
 }
@@ -53,5 +60,13 @@ Material new_material_reflective(RGBi tint, float tint_strength) {
 }
 Material new_material_refractive(RGBi tint, float tint_strength, float refractive_index) {
   return Material(refractive, tint, 0.0, 0.0, tint_strength, refractive_index);
-
 }
+bool Material::operator==(Material other) {
+    return 
+      type == other.type &&
+      color == other.color &&
+      diffuse == other.diffuse &&
+      specular == other.specular &&
+      tint_strength == other.tint_strength &&
+      refractive_index == other.refractive_index;
+  };

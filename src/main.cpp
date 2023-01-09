@@ -21,6 +21,13 @@
 */
 
 int main() {
+  std::cout << "\n[WASD] - move\n";
+  std::cout << "[Mouse] - look around\n";
+  std::cout << "[Q/E] - move up and down\n";
+  std::cout << "[PageUp/PageDown] - change FOV\n";
+  std::cout << "[Space] - change display mode\n";
+  std::cout << "[Esc] - quit\n";
+
   /* parse config file */
   Config config("config.json");
 
@@ -35,7 +42,11 @@ int main() {
 
   /* fill octree with a point cloud */
   std::cout << "\nfilling octree...\n";
-  octree.fill(Shape::sphere, 50000, &color, false);
+  octree.fill(Shape::sphere, 15, &mirror, false);
+  octree.fill(Shape::sphere, 15, &glass, false);
+  octree.fill(Shape::sphere, 25, &color, false);
+
+  /* octree.fill(Shape::sphere, 250, &mirror, false); */
   /* octree.fill(Shape::noise, 0, &color, false); */
   /* octree.fill(Shape::sphere, 50000, &mirror, false); */
   std::cout << octree.root.count_voxels() << " Voxels inserted\n";
@@ -46,11 +57,6 @@ int main() {
   show_cursor(false);
 
   /* setup done */
-  std::cout << "\nuse [WASD] to move,\n";
-  std::cout << "[Q/E] to move up and down,\n";
-  std::cout << "[PageUp/PageDown] to zoom,\n";
-  std::cout << "[Space] to change the display mode\n";
-  std::cout << "and [Esc] to quit\n";
   std::cout << "\nPress Enter to start\n";
   std::cin.ignore();
 

@@ -44,23 +44,15 @@ void OctreeNode::insert_vertex(Vertex *v, unsigned int depth, bool debug) {
     return;
   }
   // find out which child the point is part of
-  int child;
-  if (v->point.x <= center.x) {
-    if (v->point.y <= center.y) {
-      if (v->point.z <= center.z) child = 0;
-      else child = 4;
-    } else {
-      if (v->point.z <= center.z) child = 2;
-      else child = 6;
-    }
-  } else {
-    if (v->point.y <= center.y) {
-      if (v->point.z <= center.z) child = 1;
-      else child = 5;
-    } else {
-      if (v->point.z <= center.z) child = 3;
-      else child = 7;
-    }
+  int child = 0;
+  if (v->point.x >= center.x) {
+    child |= 1;
+  }
+  if (v->point.y >= center.y) {
+    child |= 2;
+  }
+  if (v->point.z >= center.z) {
+    child |= 4;
   }
   if (debug) std::cout << "  " << depth << " tree height, child " << child << " - ";
 

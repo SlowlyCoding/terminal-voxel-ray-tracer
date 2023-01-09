@@ -14,9 +14,11 @@ public:
   friend RGBi operator / (RGBi color, int n);
   friend RGBi operator / (RGBi color, float n);
   void normalize();
+  bool operator==(RGBi other);
 };
 
 enum MaterialType {
+  empty,
   standard,
   normal, // rgb of surface color is xyz of surface normal vector
   reflective,
@@ -39,9 +41,11 @@ public:
   */
   float refractive_index;
 
-  Material() : type(normal) {};
+  Material() : type(empty) {};
   Material(MaterialType type, RGBi color, float diffuse, float specular, float tint_strength, float refractive_index) :
     type(type), color(color), diffuse(diffuse), specular(specular), tint_strength(tint_strength), refractive_index(refractive_index) {};
+
+  bool operator==(Material other);
 };
 
 Material new_material_standard(RGBi color, float diffuse, float specular);

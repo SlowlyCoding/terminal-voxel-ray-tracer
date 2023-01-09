@@ -49,7 +49,7 @@ class OctreeNode {
     /* the t scalar for when the ray enters and exits the node */
     bool ray_hit_node(Ray *ray, float *_t_min, float *_t_max);
     /* returns closest point node the ray hit */ 
-    /* only_solids is used for shadow rays which cant intersect transparent objects */
+    /* only_solids is used for shadow rays which dont intersect transparent objects */
     bool intersection(Ray *ray, intersection_information *ii, bool only_solids=false);
 };
 
