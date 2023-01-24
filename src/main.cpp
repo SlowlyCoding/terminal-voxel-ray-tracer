@@ -42,11 +42,11 @@ int main() {
 
   /* fill octree with a point cloud */
   std::cout << "\nfilling octree...\n";
-  octree.fill(Shape::sphere, 15, &mirror, false);
-  octree.fill(Shape::sphere, 15, &glass, false);
-  octree.fill(Shape::sphere, 25, &color, false);
+  /* octree.fill(Shape::sphere, 15, &mirror, false); */
+  /* octree.fill(Shape::sphere, 15, &glass, false); */
+  /* octree.fill(Shape::sphere, 25, &color, false); */
 
-  /* octree.fill(Shape::sphere, 250, &mirror, false); */
+  octree.fill(Shape::sphere, 50000, &color, false);
   /* octree.fill(Shape::noise, 0, &color, false); */
   /* octree.fill(Shape::sphere, 50000, &mirror, false); */
   std::cout << octree.root.count_voxels() << " Voxels inserted\n";

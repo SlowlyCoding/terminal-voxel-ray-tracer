@@ -20,7 +20,7 @@
   "octree": {
     "center": [ 0.5, 0.5, 0.5 ],
     "side_length": 1,
-    "depth": 4
+    "depth": 5
   },
 
   "lighting": {
@@ -35,6 +35,6 @@
 
   "skybox": {
     "enabled": true,
-    "file": "assets/mountains.png"
+    "file": "assets/lake.jpg"
   }
 }
