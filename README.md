@@ -7,14 +7,14 @@ I had already had some experience with console graphics, so I made this ray trac
 This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
 
 <p align="center">
-<img src="https://github.com/SlowlyCoding/terminal_voxel_ray_tracer/blob/master/showcase/showcase.gif">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/showcase.gif">
 
 The display mode can be changed by pressing the spacebar
 
 <p align="center">
-<img src="https://github.com/SlowlyCoding/terminal_voxel_ray_tracer/blob/master/showcase/ANSI.png">
-<img src="https://github.com/SlowlyCoding/terminal_voxel_ray_tracer/blob/master/showcase/ASCII_colored.png">
-<img src="https://github.com/SlowlyCoding/terminal_voxel_ray_tracer/blob/master/showcase/ASCII.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ANSI.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ASCII_colored.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ASCII.png">
 
 
 ## Table of Contents
