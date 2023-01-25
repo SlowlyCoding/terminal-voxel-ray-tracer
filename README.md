@@ -32,8 +32,8 @@ SFML is only used to get keyboard and mouse input, there is no SFML window.
 ## Installation
 
 ```shell
-git clone https://github.com/SlowlyCoding/voxel_ray_tracer
-cd voxel_ray_tracer
+git clone https://github.com/SlowlyCoding/terminal_voxel_ray_tracer
+cd terminal_voxel_ray_tracer
 make
 ```
 
