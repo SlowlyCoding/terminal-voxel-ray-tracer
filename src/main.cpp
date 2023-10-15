@@ -37,17 +37,15 @@ int main() {
   /* create materials */
   Material glass = new_material_refractive(RGBi("purple"), 0.1, 1.5);
   Material mirror = new_material_reflective(RGBi("white"), 0.1);
-  Material color = new_material_standard(RGBi("green"), 0.3, 0.8);
+  Material color = new_material_standard(RGBi("orange"), 0.3, 0.8);
 
   /* fill octree with a point cloud */
   std::cout << "\nfilling octree...\n";
-  octree.fill(Shape::sphere, 15, &mirror, false);
-  octree.fill(Shape::sphere, 15, &glass, false);
-  octree.fill(Shape::sphere, 25, &color, false);
+  octree.create_vertices(Shape::sphere, 25, &color, true);
+  octree.create_vertices(Shape::sphere, 15, &glass, true);
+  octree.create_vertices(Shape::sphere, 15, &mirror, true);
+  octree.fill(true);
 
-  /* octree.fill(Shape::sphere, 50000, &color, false); */
-  /* octree.fill(Shape::noise, 0, &color, false); */
-  /* octree.fill(Shape::sphere, 50000, &mirror, false); */
   std::cout << octree.root.count_voxels() << " Voxels inserted\n";
 
   Renderer renderer(&config, &pixelbuffer, &camera, &octree);

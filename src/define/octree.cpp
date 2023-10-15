@@ -28,6 +28,7 @@ Octree::Octree(Config *config) {
   );
 }
 
+
 void OctreeNode::insert_vertex(Vertex *v, unsigned int depth, bool debug) {
   // check if the tree is deep enough
   if (depth == 0) {
@@ -254,7 +255,7 @@ bool OctreeNode::intersection(Ray *ray, intersection_information *ii, bool only_
   return false;
 }
 
-void Octree::fill(Shape shape, int point_count, Material *material, bool debug) {
+void Octree::create_vertices(Shape shape, int point_count, Material *material, bool debug) {
   /* first fill the vertices array with the point cloud using the given parameters */
   switch (shape) {
     case grid: {
@@ -319,9 +320,13 @@ void Octree::fill(Shape shape, int point_count, Material *material, bool debug) 
         break;
                   }
   }
+}
+
+void Octree::fill(bool debug) {
   /* then fill the octree with the vertices */
   for (int i=0; i<vertices.size(); i++) {
-    if (debug) std::cout << "Inserting Vertex:\n";
+    if (debug) std::cout << "Inserting Vertex " << i << ": ";
+    if (debug) vertices[i].point.values();
     root.insert_vertex(&vertices[i], depth, debug);
   }
 }

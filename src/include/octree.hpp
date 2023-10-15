@@ -67,5 +67,6 @@ class Octree {
     std::vector<Vertex> vertices;
 
     Octree(Config *config);
-    void fill(Shape shape, int point_count, Material *material, bool debug);
+    void create_vertices(Shape shape, int point_count, Material *material, bool debug);
+    void fill(bool debug);
 };
