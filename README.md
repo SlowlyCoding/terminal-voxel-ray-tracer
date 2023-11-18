@@ -18,7 +18,7 @@ This ray tracer only works on unix system, but I'm sure that with some small twe
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
-4. [Showcase](#showcase])
+4. [Showcase](#showcase)
 
 ## Requirements
 
