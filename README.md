@@ -1,21 +1,33 @@
 # Terminal Voxel Ray Tracer
 
-I started this project to learn more about voxels, a bit of research led me to sparse voxel octrees for storing voxels that don't change their position a lot, which is what I used here.
+I started this project to learn more about voxels, a bit of research led me to sparse voxel octrees for storing voxels 
+that don't change their position a lot, which is what is started using. 
+Later on I learned how voxels can be stored efficiently using only 1 byte mateiral indices, meaining a voxel object with 
+1000 voxels on each side could be stored using 1 GB of RAM.
+So i scrapped my octree implementation (which can still be found in some earlier commits) and wrote a new voxel managment system.
+
+I tried my best to make this ray tracer as fast and memory efficent as possibly so that it can run on the CPU.
 
 I had already had some experience with console graphics, so I made this ray tracer output to the terminal as well.
 
 This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
 
 <p align="center">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/showcase.gif">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon.jpeg">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon2.jpeg">
 
 The display mode can be changed by pressing the spacebar
 
 <p align="center">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ANSI.png">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ASCII_colored.png">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/ASCII.png">
+teapot shaded using its normals
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot1.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot2.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot3.png">
 
+<p align="center">
+Sphere containing 8.8 million voxels (16MB)
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere.jpeg">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere2.jpeg">
 
 ## Table of Contents
 
@@ -41,7 +53,7 @@ make
 
 Everything that is configurable can be found in `config.json`
 
-An explanation of the config file:
+I added some comments here for clarification, but you can just mess around with the values and see what happens :)
 ```cpp
 {
   "terminal": {
@@ -63,31 +75,27 @@ An explanation of the config file:
 
   "camera": {
     "view_point": [ 1.5, -0.5, 0.5 ],
-    "view_angle_x": 0.01, // pitch (in rad)
+    "view_angle_x": 0.5, // pitch (in rad)
     "view_angle_z": 3.1415, // yaw (in rad)
-    "fov": 55, // field of view
-    "speed": 0.5, // speed of camera movement (WASD and QE)
-    "mouse_sensitivity": 0.1
+    "fov": 70, // field of view
+    "speed": 3, // speed of camera movement (WASD and QE)
+    "mouse_sensitivity": 0.1,
+    // changes up/down direction of mouse input
+    "invert_mouse": true
   }, 
 
-  "octree": {
-    // no octree corner can be smaller than 0
-    // for example side_length 1.1 would not work with this octree center point
-    "center": [ 0.5, 0.5, 0.5 ],
-    "side_length": 1,
-    // depth defines how deep the octree is
-    // 8^depth = maximum number of voxels (capacity)
-    // cuberoot(8^depth) = octree side length in voxels
-    "depth": 4
-  },
-
-  "lighting": {
-    // [ x, y, z, light intensity ]
-    "pointlights": [[ 10, 10, 20, 2 ],
-                    [ -10, -10, -20, 2 ]]
+  "object": {
+    "model_path": "assets/model/dragon.vox",
+    "location": [0,0,0],
+    "voxel_size": 0.05,
+    // check colors in main.cpp line 28-31 or create your own
+    "color_index": 6
   },
 
   "renderer": {
+    // how many new rays are shot from each hitpoint to calculate
+    // ambient occlusion (the more, the less noise)
+    "ambient_occlusion_samples": 30,
     "max_ray_bounces": 5,
     // ASCII grayscale used for display_mode 0 and 1
     "grayscale": " .:-=+*#%@"
@@ -95,7 +103,7 @@ An explanation of the config file:
 
   "skybox": {
     "enabled": true,
-    "file": "assets/checkermap.jpg"
+    "file": "assets/skybox/mountains.png"
   }
 }
 ```

@@ -1,40 +1,38 @@
 {
-  "terminal": {
-    "fullscreen": true,
-    "width": 120,
-    "height": 102,
-    "display_mode": 2,
-    "fps_limit_enabled": true,
-    "fps_limit": 60
-  },
+    "terminal": {
+        "fullscreen": true,
+        "width": 120,
+        "height": 102,
+        "display_mode": 2,
+        "fps_limit_enabled": true,
+        "fps_limit": 60
+    },
 
-  "camera": {
-    "view_point": [ 1.5, -0.5, 1.3 ],
-    "view_angle_x": -0.5,
-    "view_angle_z": -0.8,
-    "fov": 85,
-    "speed": 0.5,
-    "mouse_sensitivity": 0.1
-  }, 
+    "camera": {
+        "view_point": [ -8, -8, -6 ],
+        "view_angle_x": 0.5,
+        "view_angle_z": 0.8,
+        "fov": 70,
+        "speed": 3,
+        "mouse_sensitivity": 0.1,
+        "invert_mouse": true
+    }, 
 
-  "octree": {
-    "center": [ 0.5, 0.5, 0.5 ],
-    "side_length": 1,
-    "depth": 4
-  },
+    "object": {
+        "model_path": "assets/model/dragon.vox",
+        "location": [0,0,0],
+        "voxel_size": 0.05,
+        "color_index": 3
+    },
 
-  "lighting": {
-    "pointlights": [[ 10, 15, 20, 2 ],
-                    [ -15, -10, -20, 2 ]]
-  },
+    "renderer": {
+        "ambient_occlusion_samples": 30,
+        "max_ray_bounces": 8,
+        "grayscale": " .:-=+*#%@"
+    },
 
-  "renderer": {
-    "max_ray_bounces": 5,
-    "grayscale": " .:-=+*#%@"
-  },
-
-  "skybox": {
-    "enabled": true,
-    "file": "assets/lake.jpg"
-  }
+    "skybox": {
+        "enabled": true,
+        "file": "assets/skybox/mountains.png"
+    }
 }
