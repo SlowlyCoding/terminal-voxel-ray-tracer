@@ -1,39 +1,24 @@
 # Terminal Voxel Ray Tracer
 
+<p align="center">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon1.png">
+
 I started this project to learn more about voxels, a bit of research led me to sparse voxel octrees for storing voxels 
-that don't change their position a lot, which is what is started using. 
+that don't change their position a lot, which is what I started using.</br>
 Later on I learned how voxels can be stored efficiently using only 1 byte mateiral indices, meaining a voxel object with 
 1000 voxels on each side could be stored using 1 GB of RAM.
 So i scrapped my octree implementation (which can still be found in some earlier commits) and wrote a new voxel managment system.
 
 I tried my best to make this ray tracer as fast and memory efficent as possibly so that it can run on the CPU.
 
-I had already had some experience with console graphics, so I made this ray tracer output to the terminal as well.
-
 This ray tracer only works on unix system, but I'm sure that with some small tweaks to `terminal.cpp` and `pixelbuffer.cpp` it would work just as well on Windows.
-
-<p align="center">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon.jpeg">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon2.jpeg">
-
-The display mode can be changed by pressing the spacebar
-
-<p align="center">
-teapot shaded using its normals
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot1.png">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot2.png">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot3.png">
-
-<p align="center">
-Sphere containing 8.8 million voxels (16MB)
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere.jpeg">
-<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere2.jpeg">
 
 ## Table of Contents
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
+4. [Showcase](#showcase])
 
 ## Requirements
 
@@ -89,7 +74,7 @@ I added some comments here for clarification, but you can just mess around with 
     "location": [0,0,0],
     "voxel_size": 0.05,
     // check colors in main.cpp line 28-31 or create your own
-    "color_index": 6
+    "color_index": 3
   },
 
   "renderer": {
@@ -107,3 +92,20 @@ I added some comments here for clarification, but you can just mess around with 
   }
 }
 ```
+
+## Showcase
+
+Dragon with mirror voxels (40K voxels)
+<p align="center">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/dragon2.png">
+
+The whole image can be displayed using ASCII characters by pressing the spacebar
+<p align="center">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot1.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot2.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/teapot3.png">
+
+Sphere containing 8.8 million voxels (16MB)
+<p align="center">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere1.png">
+<img src="https://github.com/SlowlyCoding/terminal-voxel-ray-tracer/blob/master/showcase/sphere2.png">
