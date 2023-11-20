@@ -1,12 +1,8 @@
 #include <iostream>
 #include "../include/config.hpp"
 #include "../include/terminal.hpp"
-#include "../include/clock.hpp"
-#include "../include/pixelbuffer.hpp"
-#include "../include/camera.hpp"
 #include "../include/material.hpp"
 #include "../include/renderer.hpp"
-#include "../include/vector.hpp"
 
 int main() {
     std::cout << "\n[WASD] - move\n";
@@ -25,10 +21,11 @@ int main() {
     /* create voxel object */
     std::cout << "\ncreating object...\n";
     Object object(config);
-    object.change_material_at_palette_index(1, new_material_standard(RGB("orange"), 0.9, 0.1));
-    object.change_material_at_palette_index(2, new_material_standard(RGB("green"), 0.3, 0.8));
-    object.change_material_at_palette_index(3, new_material_standard(RGB(42,42,42), 0.3, 0.8));
+    object.change_material_at_palette_index(1, new_material_standard(RGB("orange")));
+    object.change_material_at_palette_index(2, new_material_standard(RGB("green")));
+    object.change_material_at_palette_index(3, new_material_standard(RGB(42,42,42)));
     object.change_material_at_palette_index(4, new_material_reflective(RGB(64,224,208), 0.2));
+    object.change_material_at_palette_index(5, new_material_standard(RGB("random")));
     printf("Voxel array taking %luMB of space\n", (sizeof(uint8_t)*object.voxels.size())/1000000);
 
     Renderer renderer(config, &pixelbuffer, &camera, &object);

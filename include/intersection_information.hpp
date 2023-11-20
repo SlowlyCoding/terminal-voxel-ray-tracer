@@ -11,10 +11,8 @@ struct intersection_information {
 
     void debug() {
         std::cout << "t: " << t << std::endl;
-        std::cout << "point: ";
-        point.values();
-        std::cout << "normal: ";
-        normal.values();
+        std::cout << "point: " << point << std::endl;
+        std::cout << "normal: " << normal << std::endl;
         std::cout << "material color: " << material->color.r << " " << material->color.g << " " << material->color.b << std::endl;;
         inside_voxel ? std::cout << "inside voxel true\n" : std::cout << "inside voxel false\n";
 

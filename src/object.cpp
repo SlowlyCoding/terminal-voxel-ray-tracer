@@ -20,15 +20,8 @@ Object::Object(Vec3f _location, float _voxel_size, uint _voxel_count_x, uint _vo
 
 Object::Object(Config& config) {
     // open the file
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-    FILE * fp;
-    if (0 != fopen_s(&fp, filename, "rb"))
-        fp = 0;
-#else
     FILE * fp = fopen(config.object_model_path.c_str(), "rb");
-#endif
-    if (!fp)
-        return;
+    if (!fp) return;
 
     // get the buffer size which matches the size of the file
     fseek(fp, 0, SEEK_END);
@@ -45,16 +38,10 @@ Object::Object(Config& config) {
 
     // the buffer can be safely deleted once the scene is instantiated.
     delete[] buffer;
-    if (scene) {
-        for (int i=0; i<scene->num_models; i++) {
-            const ogt_vox_model* model = scene->models[i];
-            printf("model[%u] has dimension %ux%ux%u!",i,model->size_x, model->size_y, model->size_z);
-        }
-    } else {
+    if (!scene) {
         printf("couldnt open vox file\n");
         return;
     }
-    std::cout << ", using model[0]" << std::endl;
 
     voxel_size = config.object_voxel_size;
     voxel_count_x = scene->models[0]->size_x; 
@@ -72,7 +59,7 @@ Object::Object(Config& config) {
 
     }
     std::cout << "\nVoxels: " << voxel_count << std::endl;
-    delete[] scene;
+    ogt_vox_destroy_scene(scene);
 }
 
 void Object::change_material_at_palette_index(uint8_t index, Material material) {
@@ -166,13 +153,12 @@ bool Object::intersect(Ray const& ray, intersection_information *ii, bool debug)
     else {
         box_ray.origin = ray.point(tmin);
         if (debug) {
-            std::cout << "Ray enters object at ";
-            box_ray.origin.values();
+            std::cout << "Ray enters object at " << box_ray.origin << std::endl;
         }
     }
     if (debug) {
-        std::cout << " Ray exits object at ";
-        ray.point(tmax).values();
+        Vec3f exit = ray.point(tmax);
+        std::cout << " Ray exits object at " << exit << std::endl;
     }
 
     // initialization: find starting voxel

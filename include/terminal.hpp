@@ -18,7 +18,7 @@ class Terminal {
         sf::Vector2i last_mouse_position;
         bool invert_mouse;
     public:
-        Terminal(Config& config);
+        explicit Terminal(Config& config);
         void display(PixelBuffer *pb);
         bool handle_events(Camera *camera, float frametime);
 };

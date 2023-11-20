@@ -1,4 +1,4 @@
-default:
+all:
 	g++ src/*.cpp -o output.out -pthread -lsfml-window -std=c++14
 	./output.out
 

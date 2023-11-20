@@ -23,5 +23,5 @@ struct Ray {
         max_t = 9999.9;
         min_t = 0.0;
     };
-    Vec3f point(float t) const {return origin + direction*t;};
+    Vec3f point(const float t) const {return origin + direction*t;};
 };
