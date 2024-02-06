@@ -5,7 +5,7 @@
 
 I started this project to learn more about voxels, a bit of research led me to sparse voxel octrees for storing voxels 
 that don't change their position much, which is what I initially used. Later on, I learned how voxels can be stored efficiently 
-using only 1 byte material indices, meaning a voxel object with $1000^3$ voxels on each side could be stored using just `1GB` of RAM. 
+using only 1 byte material indices, meaning a voxel object with $1000^3$ voxels could be stored using just 1GB of RAM. 
 So, I scrapped my octree implementation (which can still be found in some earlier commits) and wrote a new voxel management system.
 
 I tried my best to make this ray tracer as fast and memory-efficient as possible so that it can run on the CPU. 
