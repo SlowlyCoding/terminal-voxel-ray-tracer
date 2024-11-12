@@ -1,4 +1,5 @@
-#include "../include/config.hpp"
+#include "config.hpp"
+#include <fstream>
 
 Config::Config(std::string config_file_name) {
     std::ifstream f(config_file_name);

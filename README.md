@@ -30,7 +30,11 @@ SFML is only used to get keyboard and mouse input, there is no SFML window.
 ```shell
 git clone https://github.com/SlowlyCoding/terminal_voxel_ray_tracer
 cd terminal_voxel_ray_tracer
-make
+```
+```shell
+mkdir build && cd build/
+cmake ..
+make run
 ```
 
 ## Configuration
@@ -78,7 +82,7 @@ I added some comments here for clarification, but you can simply experiment with
   "renderer": {
     // how many new rays are shot from each hitpoint to calculate
     // ambient occlusion (the more, the less noise)
-    "ambient_occlusion_samples": 30,
+    "ambient_occlusion_samples": 20,
     "max_ray_bounces": 5,
     // ASCII grayscale used for display_mode 0 and 1
     "grayscale": " .:-=+*#%@"

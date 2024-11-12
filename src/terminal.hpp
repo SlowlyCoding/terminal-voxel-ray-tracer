@@ -1,9 +1,7 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include "clock.hpp"
 #include "config.hpp"
 #include "camera.hpp"
 #include "pixelbuffer.hpp"

@@ -1,4 +1,4 @@
-#include "../include/camera.hpp"
+#include "camera.hpp"
 
 Camera::Camera(Config& config) {
     view_point = config.camera_view_point;

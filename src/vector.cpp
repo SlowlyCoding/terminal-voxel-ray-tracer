@@ -1,4 +1,4 @@
-#include "../include/vector.hpp"
+#include "vector.hpp"
 
 Vec3f Vec3f::operator+(Vec3f const& v) const {
     return Vec3f(x + v.x, y + v.y, z + v.z);

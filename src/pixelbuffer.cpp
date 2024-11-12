@@ -1,4 +1,4 @@
-#include "../include/pixelbuffer.hpp"
+#include "pixelbuffer.hpp"
 
 PixelBuffer::PixelBuffer(Config& config) {
     // get terminal size

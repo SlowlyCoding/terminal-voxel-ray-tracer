@@ -1,6 +1,7 @@
-#include "../include/object.hpp"
+#include "object.hpp"
+#include <cassert>
 #define OGT_VOX_IMPLEMENTATION
-#include "../include_external/ogt_vox.h"
+#include "../lib/ogt_vox.h"
 
 Object::Object(Vec3f _location, float _voxel_size, uint _voxel_count_x, uint _voxel_count_y, uint _voxel_count_z) {
     assert(_voxel_size > 0);
@@ -51,7 +52,7 @@ Object::Object(Config& config) {
     bounds[1] = config.object_location + Vec3f(voxel_count_x, voxel_count_y, voxel_count_z)*voxel_size;
     voxels = std::vector<uint8_t>(voxel_count_x*voxel_count_y*voxel_count_z,255);
     long int voxel_count = 0;
-    for(int i=0; i<voxel_count_x*voxel_count_y*voxel_count_z; i++) {
+    for(unsigned int i=0; i<voxel_count_x*voxel_count_y*voxel_count_z; i++) {
         if (scene->models[0]->voxel_data[i] != 0) {
             change_voxel_material(i, config.object_color_index);
             voxel_count++;
@@ -71,9 +72,9 @@ void Object::change_material_at_palette_index(uint8_t index, Material material) 
 void Object::resize_x(uint new_voxel_count_x) {
     // TODO: this
     if (voxel_count_x < new_voxel_count_x) {
-        for (int y=0; y<voxel_count_y; y++) {
-            for (int z=0; z<voxel_count_z; z++) {
-                for (int x=0; x<new_voxel_count_x-voxel_count_x; x++) {
+        for (unsigned int y=0; y<voxel_count_y; y++) {
+            for (unsigned int z=0; z<voxel_count_z; z++) {
+                for (unsigned int x=0; x<new_voxel_count_x-voxel_count_x; x++) {
                     voxels.insert(
                             voxels.begin() + 
                             z*voxel_count_x*voxel_count_y + 
@@ -113,7 +114,7 @@ bool Object::intersect_bounding_box(Ray const& ray, float *tmin, float *tmax) {
     }
     // An Efficient and Robust Ray–Box Intersection Algorithm
     // https://people.csail.mit.edu/amy/papers/box-jgt.pdf
-    float txmin, txmax, tymin, tymax, tzmin, tzmax;
+    float /*txmin, txmax,*/ tymin, tymax, tzmin, tzmax;
     *tmin = (bounds[ray.sign[0]].x - ray.origin.x) * ray.inv_direction.x;
     *tmax = (bounds[1-ray.sign[0]].x - ray.origin.x) * ray.inv_direction.x;
     tymin = (bounds[ray.sign[1]].y - ray.origin.y) * ray.inv_direction.y;
@@ -132,11 +133,11 @@ bool Object::intersect_bounding_box(Ray const& ray, float *tmin, float *tmax) {
 std::tuple<int,int,int> Object::find_starting_voxel(Vec3f const& object_hit_point) {
     Vec3f d = (object_hit_point - bounds[0]);
     assert(d.x >= -0.001 && d.y >= -0.001 && d.z >= -0.001);
-    int x = d.x/voxel_size;
+    unsigned int x = d.x/voxel_size;
     if (x == voxel_count_x) x--;
-    int y = d.y/voxel_size;
+    unsigned int y = d.y/voxel_size;
     if (y == voxel_count_y) y--;
-    int z = d.z/voxel_size;
+    unsigned int z = d.z/voxel_size;
     if (z == voxel_count_z) z--;
     return std::make_tuple(x,y,z);
 }
@@ -193,21 +194,21 @@ bool Object::intersect(Ray const& ray, intersection_information *ii, bool debug)
         if (txmax < tymax) {
             if(txmax < tzmax) {
                 x = x + ray.stepx;
-                if(x == voxel_count_x || x == -1) return false;
+                if(x == (int)voxel_count_x || x == -1) return false;
                 txmax = txmax + txdelta;
             } else {
                 z = z + ray.stepz;
-                if(z == voxel_count_z || z == -1) return false;
+                if(z == (int)voxel_count_z || z == -1) return false;
                 tzmax = tzmax + tzdelta;
             }
         } else {
             if(tymax < tzmax) {
                 y = y + ray.stepy;
-                if(y == voxel_count_y || y == -1) return false;
+                if(y == (int)voxel_count_y || y == -1) return false;
                 tymax = tymax + tydelta;
             } else {
                 z = z + ray.stepz;
-                if(z == voxel_count_z || z == -1) return false;
+                if(z == (int)voxel_count_z || z == -1) return false;
                 tzmax = tzmax + tzdelta;
             }
         }

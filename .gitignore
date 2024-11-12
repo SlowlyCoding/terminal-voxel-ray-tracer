@@ -1,5 +1,5 @@
-*.out
-*.ppm
+build/*
+voxel_ray_tracer
 .DS_Store
 .clangd
 

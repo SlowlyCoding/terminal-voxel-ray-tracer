@@ -1,6 +1,8 @@
-#include "../include/renderer.hpp"
+#include <vector>
+#include "renderer.hpp"
+#include "intersection_information.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-#include "../include_external/nothings/stb_image.h"
+#include "../lib/nothings/stb_image.h"
 
 Renderer::Renderer(Config& config, PixelBuffer *_pixelbuffer, Camera *_camera, Object *_object) {
     pixelbuffer = _pixelbuffer;
@@ -36,12 +38,11 @@ RGB Renderer::trace_ray(Ray *ray, int max_ray_bounces) {
                 // and checking if the intersect anything
                 intersection_information _;
                 int occlusion = 0;
-                for (int i=0; i<ao_samples; i++) {
+                for (unsigned int i=0; i<ao_samples; i++) {
                     Vec3f direction = ii.normal;
                     if (ii.normal.x == 0) direction.x = ((double)rand()/RAND_MAX-0.5)*5.6f;
                     if (ii.normal.y == 0) direction.y = ((double)rand()/RAND_MAX-0.5)*5.6f;
                     if (ii.normal.z == 0) direction.z = ((double)rand()/RAND_MAX-0.5)*5.6f;
-                    direction = direction;
                     Ray occlusion_ray(ii.point+ii.normal*0.001f, direction);
                     if (object->intersect(occlusion_ray, &_, false)) occlusion++;
                 }

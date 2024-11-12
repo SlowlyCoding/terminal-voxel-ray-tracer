@@ -2,11 +2,9 @@
 #include "config.hpp"
 #include "camera.hpp"
 #include "pixelbuffer.hpp"
-#include "intersection_information.hpp"
 #include "vector.hpp"
 #include "object.hpp"
 #include "ray.hpp"
-#include <vector>
 #include <thread>
 
 class Renderer {

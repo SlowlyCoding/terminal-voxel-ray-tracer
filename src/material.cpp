@@ -1,4 +1,4 @@
-#include "../include/material.hpp"
+#include "material.hpp"
 
 RGB::RGB(std::string color) {
     if (color == "background") {

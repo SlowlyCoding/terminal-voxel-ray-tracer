@@ -1,8 +1,9 @@
 #include <iostream>
-#include "../include/config.hpp"
-#include "../include/terminal.hpp"
-#include "../include/material.hpp"
-#include "../include/renderer.hpp"
+#include "clock.hpp"
+#include "config.hpp"
+#include "terminal.hpp"
+#include "material.hpp"
+#include "renderer.hpp"
 
 int main() {
     std::cout << "\n[WASD] - move\n";

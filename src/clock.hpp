@@ -1,11 +1,8 @@
 #pragma once
-#include <cmath>
+#include <thread>
 #include <chrono>
 #include <string>
-#include <thread>
-#include <iostream>
 #include "config.hpp"
-#include "pixelbuffer.hpp"
 
 class Clock {
     private:

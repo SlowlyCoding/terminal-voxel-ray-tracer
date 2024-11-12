@@ -1,4 +1,4 @@
-#include "../include/terminal.hpp"
+#include "terminal.hpp"
 
 Terminal::Terminal(Config& config) {
     display_mode = config.terminal_display_mode;

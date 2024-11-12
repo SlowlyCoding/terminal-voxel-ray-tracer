@@ -1,4 +1,4 @@
-#include "../include/clock.hpp"
+#include "clock.hpp"
 
 Clock::Clock(Config& config) {
     fps_limit_enabled = config.terminal_fps_limit_enabled;
