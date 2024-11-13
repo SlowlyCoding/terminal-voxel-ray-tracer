@@ -4,7 +4,7 @@
         "width": 120,
         "height": 102,
         "display_mode": 2,
-        "fps_limit_enabled": true,
+        "fps_limit_enabled": false,
         "fps_limit": 60
     },
 
@@ -12,8 +12,8 @@
         "view_point": [ -5, -5, 5 ],
         "view_angle_x": -0.4,
         "view_angle_z": 0.785,
-        "fov": 70,
-        "speed": 3,
+        "fov": 110,
+        "speed": 10,
         "mouse_sensitivity": 0.1,
         "invert_mouse": true
     }, 
@@ -21,7 +21,7 @@
     "object": {
         "model_path": "assets/model/dragon.vox",
         "location": [0,0,0],
-        "voxel_size": 0.05,
+        "voxel_size": 0.25,
         "color_index": 3
     },
 

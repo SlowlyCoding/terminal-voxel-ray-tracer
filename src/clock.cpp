@@ -1,3 +1,5 @@
+#include <thread>
+#include <iomanip>
 #include "clock.hpp"
 
 Clock::Clock(Config& config) {
@@ -36,17 +38,10 @@ void Clock::finished_frame() {
     frame_counter++;
 }
 void Clock::display_performance() {
-    rendertime_str = std::to_string(rendertime*1000);
-    rendertime_str = rendertime_str.substr(0, rendertime_str.find(".")+precision+1);
-    displaytime_str = std::to_string(displaytime*1000);
-    displaytime_str = displaytime_str.substr(0, displaytime_str.find(".")+precision+1);
-    frametime_str = std::to_string(frametime*1000);
-    frametime_str = frametime_str.substr(0, frametime_str.find(".")+precision+1);
-
-    fps_str = std::string("\rFPS: ").append(std::to_string((int)round((1/frametime)))).append(std::string("  "));
-    avgfps_str = std::string("avgFPS: ").append(std::to_string((int)round((fps_combined/frame_counter)))).append(std::string("  "));
-    rendertime_str = std::string("Render: ").append(rendertime_str).append(std::string("ms  "));
-    displaytime_str = std::string("Display: ").append(displaytime_str).append(std::string("ms  "));
-    frametime_str = std::string("Frame: ").append(frametime_str).append(std::string("ms  "));
-    std::cout << fps_str << avgfps_str << rendertime_str << displaytime_str << frametime_str << std::endl;
+    std::cout << "\rFPS:" << std::right << std::setw(4) << (int)round(1/frametime)
+              << "   avgFPS:" << std::right << std::setw(4) << (int)round((fps_combined/frame_counter))
+              << std::fixed << std::setprecision(1)
+              << "   Render:" << std::right << std::setw(5) << rendertime*1000
+              << "   Display:" << std::right << std::setw(5) << displaytime*1000
+              << "   Frame:" << std::right << std::setw(5) << frametime*1000 << std::endl;
 }
