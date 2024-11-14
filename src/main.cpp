@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include "clock.hpp"
 #include "config.hpp"
@@ -27,7 +28,8 @@ int main() {
     object.change_material_at_palette_index(3, new_material_standard(RGB(42,42,42)));
     object.change_material_at_palette_index(4, new_material_reflective(RGB(64,224,208), 0.2));
     object.change_material_at_palette_index(5, new_material_standard(RGB("random")));
-    printf("Voxel array taking %luMB of space\n", (sizeof(uint8_t)*object.voxels.size())/1000000);
+    std::cout << "Voxel model taking " << std::fixed << std::setprecision(2) 
+              << (object.voxels.size())/1e6 << "MB of space\n";
 
     Renderer renderer(config, &pixelbuffer, &camera, &object);
     Clock clock(config);

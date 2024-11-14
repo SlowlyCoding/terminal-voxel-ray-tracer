@@ -75,13 +75,13 @@ I added some comments here for clarification, but you can simply experiment with
     "model_path": "assets/model/dragon.vox",
     "location": [0,0,0],
     "voxel_size": 0.05,
-    // check colors in main.cpp line 28-31 or create your own
+    // check colors in main.cpp line 26-30 or create your own
     "color_index": 3
   },
 
   "renderer": {
     // how many new rays are shot from each hitpoint to calculate
-    // ambient occlusion (the more, the less noise)
+    // ambient occlusion (the more, the less noise, at the cost of performance)
     "ambient_occlusion_samples": 20,
     "max_ray_bounces": 5,
     // ASCII grayscale used for display_mode 0 and 1
