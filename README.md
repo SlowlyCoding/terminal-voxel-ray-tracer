@@ -33,7 +33,7 @@ cd terminal_voxel_ray_tracer
 ```
 ```shell
 make
-./main
+./voxel_ray_tracer
 ```
 
 ## Configuration
