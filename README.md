@@ -21,7 +21,7 @@ This ray tracer only works on Unix systems, but I'm sure that with a few minor t
 
 ## Requirements
 
-[SFML](https://www.sfml-dev.org/download.php) is required for this to work
+[SFML 3](https://www.sfml-dev.org/download.php) is required for this to work
 
 SFML is only used to get keyboard and mouse input, there is no SFML window.
 
@@ -32,9 +32,8 @@ git clone https://github.com/SlowlyCoding/terminal_voxel_ray_tracer
 cd terminal_voxel_ray_tracer
 ```
 ```shell
-mkdir build && cd build/
-cmake ..
-make run
+make
+./main
 ```
 
 ## Configuration

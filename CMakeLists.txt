@@ -22,12 +22,5 @@ FetchContent_MakeAvailable(json)
 target_link_libraries(voxel_ray_tracer PRIVATE nlohmann_json::nlohmann_json)
 
 # link SFML
-find_package(SFML REQUIRED COMPONENTS window)
-# include_directories(${SFML_INCLUDE_DIR})
-# target_link_libraries(voxel_ray_tracer ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-target_link_libraries(voxel_ray_tracer PRIVATE sfml-graphics)
-
-# enable 'make run' command
-add_custom_target(run DEPENDS voxel_ray_tracer COMMAND voxel_ray_tracer
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+find_package(SFML 3 REQUIRED COMPONENTS Graphics)
+target_link_libraries(voxel_ray_tracer PRIVATE SFML::Graphics)

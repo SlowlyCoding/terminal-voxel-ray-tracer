@@ -120,40 +120,40 @@ void Terminal::display(PixelBuffer *pixelbuffer) {
 }
 
 bool Terminal::handle_events(Camera *camera, float frametime) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { // forward
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W)) { // forward
         camera->view_point = camera->view_point + camera->view_direction*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { // backward
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::S)) { // backward
         camera->view_point = camera->view_point - camera->view_direction*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { // left
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A)) { // left
         camera->view_point = camera->view_point + camera->view_left*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { // right
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D)) { // right
         camera->view_point = camera->view_point - camera->view_left*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) { // up
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::E)) { // up
         camera->view_point = camera->view_point + camera->view_up*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) { // down
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Q)) { // down
         camera->view_point = camera->view_point - camera->view_up*camera_speed*frametime;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp)) { // zoom (decrease FOV)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::PageUp)) { // zoom (decrease FOV)
         camera->FOV -= camera_speed*15.0f*frametime;
         camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown)) { // zoom (increase FOV)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::PageDown)) { // zoom (increase FOV)
         camera->FOV += camera_speed*15.0f*frametime;
         camera->FOV = std::min(110.0f, std::max(1.0f, camera->FOV));
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) { // change display mode
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space)) { // change display mode
         if (display_mode == 2) {
             display_mode = 0;
         } else {
             display_mode++;
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) { // quit
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Escape)) { // quit
         return true;
     }
 
